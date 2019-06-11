@@ -1,10 +1,11 @@
-package com.bit5team2.dummy.entity;
+package bit5.team2.account.lib;
 
 public enum ErrorCode {
     E00,
     E01,
     E02,
     E03,
+    E04,
     E99;
 
     private ErrorCode() {
@@ -20,6 +21,8 @@ public enum ErrorCode {
                 return "Unauthorized";
             case E03:
                 return "Failed";
+            case E04:
+                return "Invalid";
             case E99:
                 return "System Exception";
             default:

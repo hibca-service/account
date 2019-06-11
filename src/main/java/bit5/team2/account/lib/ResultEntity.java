@@ -1,4 +1,4 @@
-package com.bit5team2.dummy.entity;
+package bit5.team2.account.lib;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.validation.FieldError;
