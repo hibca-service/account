@@ -34,4 +34,40 @@ public class UserRepo {
             return id;
         }
     }
+    
+    public User findById(String id) {
+    	for (User user : users) {
+    		if (user.getId().equals(id)) {
+    			return user;
+    		}
+    	}
+    	return null;
+    }
+    
+    public User findByEmail(String email) {
+    	for (User user : users) {
+    		if (user.getEmail().equals(email)) {
+    			return user;
+    		}
+    	}
+    	return null;
+    }
+    
+    public User findByPhoneNumber(String phoneNumber) {
+    	for (User user : users) {
+    		if (user.getEmail().equals(phoneNumber)) {
+    			return user;
+    		}
+    	}
+    	return null;
+    }
+    
+    public User findByUsername(String username) {
+    	for (User user : users) {
+    		if (user.getEmail().equals(username)) {
+    			return user;
+    		}
+    	}
+    	return null;
+    }
 }

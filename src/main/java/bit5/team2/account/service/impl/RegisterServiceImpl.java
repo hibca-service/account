@@ -7,7 +7,9 @@ import java.security.NoSuchAlgorithmException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import bit5.team2.account.model.RegisterInput;
+import bit5.team2.account.model.RegisterInput1;
+import bit5.team2.account.model.RegisterInput2;
+import bit5.team2.account.model.RegisterInput3;
 import bit5.team2.account.model.User;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.RegisterService;
@@ -17,32 +19,68 @@ public class RegisterServiceImpl implements RegisterService {
 	@Autowired
 	UserRepo userRepo;
 	
-	public void register(RegisterInput input) {
-		String convertedPassword = new String();
+	public String registerStep1(RegisterInput1 input) {
+		User user = new User();
+		User checkEmail = userRepo.findByEmail(input.getEmail());
 		
-		//encrypt password
-		try {
-        	MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        	byte[] encodedhash = digest.digest(input.getPassword().getBytes(StandardCharsets.UTF_8));
-        	convertedPassword = bytesToHex(encodedhash);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+		//check email and phone number data
+		if ( checkEmail == null ) {
+			//put data into db
+			user.setId(String.valueOf(userRepo.nextId()));
+			user.setEmail(input.getEmail());
+			user.setPhoneNumber(input.getPhoneNumber());
+			user.setOa(input.isOa());
+			
+			userRepo.save(user);
+			
+			return user.getId();
+		} else {
+			if (!(checkEmail.isFinished() == true)) {
+				return user.getId();
+			}
 		}
+		return "failed";
+    }
+	
+	public String registerStep2(RegisterInput2 input) {
+		String convertedPassword = new String();
+		User user = userRepo.findById(input.getId());
+		User checkUsername = userRepo.findByUsername(input.getUsername());
+		
+		//check username
+		if ( checkUsername == null ) {
+			//put data into db
+			try {
+	        	MessageDigest digest = MessageDigest.getInstance("SHA-256");
+	        	byte[] encodedhash = digest.digest(input.getPassword().getBytes(StandardCharsets.UTF_8));
+	        	convertedPassword = bytesToHex(encodedhash);
+			} catch (NoSuchAlgorithmException e) {
+				
+				e.printStackTrace();
+			}
+			
+	        user.setUsername(input.getUsername());
+	        user.setPassword(convertedPassword);
+			userRepo.save(user);
+			return user.getId();
+		} else {
+			if ( !(user.isFinished() == true)) {
+				return user.getId();
+			}
+		}
+		return "failed";
+    }
+	
+	public void registerStep3(RegisterInput3 input) {
+		User user = userRepo.findById(input.getId());
 		
 		//put data into db
-		User user = new User();
-		user.setId(String.valueOf(userRepo.nextId()));
-		user.setName(input.getName());
-		user.setUsername(input.getUsername());
-		user.setEmail(input.getEmail());
-		user.setPassword(convertedPassword);
-		user.setPhoneNumber(input.getPhoneNumber());
-		user.setDateOfBirth(input.getDateOfBirth());
-		user.setPurpose(input.getPurpose());
-		user.setOa(input.isOa());
-
+        user.setName(input.getName());
+        user.setDateOfBirth(input.getDateOfBirth());
+        user.setPurpose(input.getPurpose());
+		
 		userRepo.save(user);
-    }
+	}
 	
 	private static String bytesToHex(byte[] hash) {
 	    StringBuffer hexString = new StringBuffer();
