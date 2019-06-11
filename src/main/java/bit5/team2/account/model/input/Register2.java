@@ -1,4 +1,4 @@
-package bit5.team2.account.model;
+package bit5.team2.account.model.input;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import javax.validation.constraints.*;
 
 @Getter
 @Setter
-public class RegisterInput2 {
+public class Register2 {
 	@NotEmpty
 	private String id;
 	

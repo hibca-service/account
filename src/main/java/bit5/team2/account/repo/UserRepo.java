@@ -2,7 +2,7 @@ package bit5.team2.account.repo;
 
 import org.springframework.stereotype.Repository;
 
-import bit5.team2.account.model.User;
+import bit5.team2.account.model.entity.User;
 
 import java.util.ArrayList;
 

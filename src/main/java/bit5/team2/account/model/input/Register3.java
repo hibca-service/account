@@ -1,4 +1,4 @@
-package bit5.team2.account.model;
+package bit5.team2.account.model.input;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -10,7 +10,7 @@ import java.sql.Date;
 
 @Getter
 @Setter
-public class RegisterInput3 {
+public class Register3 {
 	@NotEmpty
 	private String id;
 	

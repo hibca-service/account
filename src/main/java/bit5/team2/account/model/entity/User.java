@@ -1,4 +1,4 @@
-package bit5.team2.account.model;
+package bit5.team2.account.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
