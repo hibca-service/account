@@ -23,7 +23,6 @@ public class ProfileServiceImpl implements ProfileService {
 			else {
 				return 1;
 			}
-				
 		}
 		
 		if (!(input.getPhoneNumber().equals(null))) {
@@ -33,7 +32,6 @@ public class ProfileServiceImpl implements ProfileService {
 			else {
 				return 1;
 			}
-				
 		}
 		
 		if (!(input.getDateOfBirth().equals(null))) {
