@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import bit5.team2.account.model.RegisterInput1;
 import bit5.team2.account.model.RegisterInput2;
+import bit5.team2.account.model.RegisterInput3;
 import bit5.team2.account.model.User;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.RegisterService;
@@ -42,24 +43,44 @@ public class RegisterServiceImpl implements RegisterService {
     }
 	
 	public String registerStep2(RegisterInput2 input) {
-		User user = new User();
+		String convertedPassword = new String();
+		User user = userRepo.findById(input.getId());
 		User checkUsername = userRepo.findByUsername(input.getUsername());
 		
-		//check email and phone number data
-		if ( checkUsername.equals(null) ) {
+		//check username
+		if ( checkUsername == null ) {
 			//put data into db
+			try {
+	        	MessageDigest digest = MessageDigest.getInstance("SHA-256");
+	        	byte[] encodedhash = digest.digest(input.getPassword().getBytes(StandardCharsets.UTF_8));
+	        	convertedPassword = bytesToHex(encodedhash);
+			} catch (NoSuchAlgorithmException e) {
+				
+				e.printStackTrace();
+			}
+			
 	        user.setUsername(input.getUsername());
-	        user.setPassword(input.getPassword());
-			user.setId(String.valueOf(userRepo.nextId()));
+	        user.setPassword(convertedPassword);
 			userRepo.save(user);
-			return "success";
+			return user.getId();
 		} else {
-			if (!(user.isFinished() == true)) {
+			if ( !(user.isFinished() == true)) {
 				return user.getId();
 			}
 		}
 		return "failed";
     }
+	
+	public void registerStep3(RegisterInput3 input) {
+		User user = userRepo.findById(input.getId());
+		
+		//put data into db
+        user.setName(input.getName());
+        user.setDateOfBirth(input.getDateOfBirth());
+        user.setPurpose(input.getPurpose());
+		
+		userRepo.save(user);
+	}
 	
 	private static String bytesToHex(byte[] hash) {
 	    StringBuffer hexString = new StringBuffer();

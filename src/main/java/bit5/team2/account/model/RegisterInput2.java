@@ -9,6 +9,9 @@ import javax.validation.constraints.*;
 @Setter
 public class RegisterInput2 {
 	@NotEmpty
+	private String id;
+	
+	@NotEmpty
 	private String username;
 
 	@NotEmpty

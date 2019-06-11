@@ -12,6 +12,9 @@ import java.sql.Date;
 @Setter
 public class RegisterInput3 {
 	@NotEmpty
+	private String id;
+	
+	@NotEmpty
 	private String name;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
