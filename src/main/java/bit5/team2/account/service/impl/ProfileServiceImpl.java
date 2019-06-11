@@ -17,19 +17,23 @@ public class ProfileServiceImpl implements ProfileService {
 		User user = userRepo.findByUsername(input.getUsername());
 		
 		if (!(input.getEmail().equals(null))) {
-			User checkEmail = userRepo.findByEmail(input.getEmail());
-			if (checkEmail == null)
+			if (userRepo.findByEmail(input.getEmail()) == null) {
 				user.setEmail(input.getEmail());
-			else
+			}
+			else {
 				return 1;
+			}
+				
 		}
 		
 		if (!(input.getPhoneNumber().equals(null))) {
-			User checkPhoneNumber = userRepo.findByPhoneNumber(input.getPhoneNumber());
-			if (checkPhoneNumber == null)
+			if (userRepo.findByPhoneNumber(input.getPhoneNumber()) == null) {
 				user.setPhoneNumber(input.getPhoneNumber());
-			else
+			} 
+			else {
 				return 1;
+			}
+				
 		}
 		
 		if (!(input.getDateOfBirth().equals(null))) {
