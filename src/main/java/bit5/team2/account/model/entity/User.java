@@ -18,4 +18,5 @@ public class User {
     private String purpose;
     private boolean oa;
     private boolean finished;
+    private boolean isEmailVerified;
 }
