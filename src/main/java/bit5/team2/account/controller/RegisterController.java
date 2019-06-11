@@ -27,7 +27,10 @@ public class RegisterController extends BaseController {
         if (errorInput == null) {
         	String output = new String();
         	output = registerService.registerStep1(input);
-            return this.success(output);
+        	if (output == null)
+        		return this.failed();
+        	else
+        		return this.success(output);
         }
         else return errorInput;
     }
@@ -39,7 +42,10 @@ public class RegisterController extends BaseController {
         if (errorInput == null) {
         	String output = new String();
         	output = registerService.registerStep2(input);
-            return this.success(output);
+        	if (output == null)
+        		return this.failed();
+        	else
+        		return this.success(output);
         }
         else return errorInput;
     }
@@ -50,7 +56,7 @@ public class RegisterController extends BaseController {
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
         	registerService.registerStep3(input);
-            return this.success("ok");
+            return this.success(null);
         }
         else return errorInput;
     }

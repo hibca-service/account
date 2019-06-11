@@ -39,7 +39,7 @@ public class RegisterServiceImpl implements RegisterService {
 				return user.getId();
 			}
 		}
-		return "failed";
+		return null;
     }
 	
 	public String registerStep2(RegisterInput2 input) {
@@ -68,7 +68,7 @@ public class RegisterServiceImpl implements RegisterService {
 				return user.getId();
 			}
 		}
-		return "failed";
+		return null;
     }
 	
 	public void registerStep3(RegisterInput3 input) {
