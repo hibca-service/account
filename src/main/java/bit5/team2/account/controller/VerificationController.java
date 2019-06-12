@@ -34,4 +34,21 @@ public class VerificationController extends BaseController{
 	    	return errorInput;
 		}
 	}
+	
+	@GetMapping(value = "/via-phone")
+	public @ResponseBody
+	ResultEntity<Object> viaPhone(@RequestParam String id, BindingResult bindingResult){
+	    ResultEntity<Object> errorInput = this.validateInput(bindingResult);
+	    if (errorInput == null) {
+	    	int output = verificationService.viaPhone(id);
+	    	if (output == 0) {
+	    		return this.success(null);
+	    	} else {
+	    		return this.failed();
+	    	}
+	    }
+	    else {
+	    	return errorInput;
+		}
+	}
 }
