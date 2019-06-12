@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public class JWT {
     private static final String KEY_ADMIN = "c7EmwfJWKxzOpDYygebs";
     private static final String KEY_USER = "mo65pujJOkfZ7Sy4rzB4";

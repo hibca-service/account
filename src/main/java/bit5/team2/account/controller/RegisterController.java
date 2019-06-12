@@ -1,6 +1,5 @@
 package bit5.team2.account.controller;
 
-
 import bit5.team2.account.lib.BaseController;
 import bit5.team2.account.lib.ResultEntity;
 import bit5.team2.account.model.input.Register1;

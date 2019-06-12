@@ -1,8 +1,8 @@
 package bit5.team2.account.controller;
 
-import bit5.team2.account.Login;
 import bit5.team2.account.lib.BaseController;
 import bit5.team2.account.lib.ResultEntity;
+import bit5.team2.account.model.input.Login;
 import bit5.team2.account.model.output.Token;
 import bit5.team2.account.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
