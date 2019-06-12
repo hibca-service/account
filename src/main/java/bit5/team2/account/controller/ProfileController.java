@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import bit5.team2.account.lib.BaseController;
 import bit5.team2.account.lib.ResultEntity;
 import bit5.team2.account.model.input.InChangeProfile;
+import bit5.team2.account.model.output.OutGetProfile;
 import bit5.team2.account.service.ProfileService;
 
 @RestController
@@ -22,9 +23,6 @@ import bit5.team2.account.service.ProfileService;
 public class ProfileController extends BaseController{
 	@Autowired
 	ProfileService profileService;
-	
-	@Autowired
-	GetProfileService getProfileService;
 	
 	@PostMapping(value = "/change-profile", consumes = "application/json")
     public @ResponseBody
@@ -48,7 +46,7 @@ public class ProfileController extends BaseController{
     ResultEntity<Object> changeProfile(@RequestParam String username , BindingResult bindingResult){
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
-        	OutGetProfile output = getProfileService.getProfile(username);
+        	OutGetProfile output = profileService.getProfile(username);
         	if (output.equals(null)) {
         		return this.failed();
         	} else {
