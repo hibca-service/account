@@ -52,7 +52,6 @@ public class LoginServiceImpl extends BaseService implements LoginService {
             map.put("dateOfBirth",user.getDateOfBirth());
             map.put("purpose",user.getPurpose());
             map.put("oa",user.isOa());
-            map.put("finished",user.isFinished());
             String access = jwt.generateToken(map,false,this.accessTokenDuration);
 
             OutLogin token = new OutLogin();
