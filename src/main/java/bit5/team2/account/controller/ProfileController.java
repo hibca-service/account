@@ -51,10 +51,11 @@ public class ProfileController extends BaseController{
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
         	OutGetProfile output = getProfileService.getProfile(username);
-        	if (output.equals(null))
+        	if (output.equals(null)) {
         		return this.failed();
-        	else
+        	} else {
         		return this.success(output);
+        	}	
         }
         else return errorInput;
     }
