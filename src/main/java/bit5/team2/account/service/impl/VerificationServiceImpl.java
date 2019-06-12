@@ -20,4 +20,13 @@ public class VerificationServiceImpl implements VerificationService {
 		}
 		return 1;
 	}
+	
+	public int viaPhone(String id) {
+		User user = userRepo.findById(id);
+		if (user != null) {
+			user.setPhoneVerified(true);
+			return 0;
+		}
+		return 1;
+	}
 }
