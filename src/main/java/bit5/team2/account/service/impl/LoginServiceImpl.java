@@ -4,6 +4,7 @@ import bit5.team2.account.lib.BaseService;
 import bit5.team2.account.lib.JWT;
 import bit5.team2.account.model.entity.User;
 import bit5.team2.account.model.output.OutLogin;
+import bit5.team2.account.model.output.OutLoginAdmin;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,25 @@ public class LoginServiceImpl extends BaseService implements LoginService {
         }
 
         OutLogin output = this._loginMobile(username,hashedPassword);
-        if (output == null) {
-            return this._loginWeb(username,hashedPassword);
-        } else {
-            return output;
+        if (output != null) {
+        	return output;
         }
+        
+        return null;
+    }
+    
+    public OutLoginAdmin loginAdmin(String username, String password) {
+    	String hashedPassword = this.hash(password);
+        if (hashedPassword == null) {
+            return null;
+        }
+
+        OutLoginAdmin output = this._loginWeb(username,hashedPassword);
+        if (output != null) {
+        	return output;
+        }
+        
+        return null;
     }
 
     private OutLogin _loginMobile(String username, String password) {
@@ -62,7 +77,7 @@ public class LoginServiceImpl extends BaseService implements LoginService {
         }
     }
 
-    private OutLogin _loginWeb(String username, String password) {
+    private OutLoginAdmin _loginWeb(String username, String password) {
         return null;
     }
 }
