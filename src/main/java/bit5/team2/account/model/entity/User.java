@@ -17,6 +17,6 @@ public class User {
     private Date dateOfBirth;
     private String purpose;
     private boolean oa;
-    private boolean finished;
-    private boolean isEmailVerified;
+    private boolean emailVerified;
+    private boolean phoneVerified;
 }

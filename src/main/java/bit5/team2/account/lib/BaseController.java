@@ -49,6 +49,10 @@ public class BaseController {
     protected ResultEntity<Object> failed() {
         return new ResultEntity<>(null,ErrorCode.E03);
     }
+    
+    protected ResultEntity<Object> failed(Object o) {
+        return new ResultEntity<>(o,ErrorCode.E03);
+    }
 
     protected ResultEntity<Object> invalid(Object o) {
         return new ResultEntity<>(o,ErrorCode.E04);
