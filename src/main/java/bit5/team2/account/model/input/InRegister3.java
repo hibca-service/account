@@ -10,7 +10,7 @@ import java.sql.Date;
 
 @Getter
 @Setter
-public class Register3 {
+public class InRegister3 {
 	@NotEmpty
 	private String id;
 	

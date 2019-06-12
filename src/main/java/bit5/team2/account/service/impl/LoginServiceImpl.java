@@ -3,7 +3,7 @@ package bit5.team2.account.service.impl;
 import bit5.team2.account.lib.BaseService;
 import bit5.team2.account.lib.JWT;
 import bit5.team2.account.model.entity.User;
-import bit5.team2.account.model.output.Token;
+import bit5.team2.account.model.output.OutLogin;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +24,13 @@ public class LoginServiceImpl extends BaseService implements LoginService {
     private int accessTokenDuration;
 
     @Override
-    public Token login(String username, String password) {
+    public OutLogin login(String username, String password) {
         String hashedPassword = this.hash(password);
         if (hashedPassword == null) {
             return null;
         }
 
-        Token output = this._loginMobile(username,hashedPassword);
+        OutLogin output = this._loginMobile(username,hashedPassword);
         if (output == null) {
             return this._loginWeb(username,hashedPassword);
         } else {
@@ -38,7 +38,7 @@ public class LoginServiceImpl extends BaseService implements LoginService {
         }
     }
 
-    private Token _loginMobile(String username, String password) {
+    private OutLogin _loginMobile(String username, String password) {
         User user = userRepo.findByUsernameAndPassword(username,password);
         if (user == null) {
             return null;
@@ -55,7 +55,7 @@ public class LoginServiceImpl extends BaseService implements LoginService {
             map.put("finished",user.isFinished());
             String access = jwt.generateToken(map,false,this.accessTokenDuration);
 
-            Token token = new Token();
+            OutLogin token = new OutLogin();
             token.setAccessToken(access);
             token.setRefreshToken(refresh);
 
@@ -63,7 +63,7 @@ public class LoginServiceImpl extends BaseService implements LoginService {
         }
     }
 
-    private Token _loginWeb(String username, String password) {
+    private OutLogin _loginWeb(String username, String password) {
         return null;
     }
 }

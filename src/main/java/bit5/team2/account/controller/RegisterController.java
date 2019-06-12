@@ -2,9 +2,9 @@ package bit5.team2.account.controller;
 
 import bit5.team2.account.lib.BaseController;
 import bit5.team2.account.lib.ResultEntity;
-import bit5.team2.account.model.input.Register1;
-import bit5.team2.account.model.input.Register2;
-import bit5.team2.account.model.input.Register3;
+import bit5.team2.account.model.input.InRegister1;
+import bit5.team2.account.model.input.InRegister2;
+import bit5.team2.account.model.input.InRegister3;
 import bit5.team2.account.service.RegisterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class RegisterController extends BaseController {
 
     @PostMapping(value = "/register-step-1", consumes = "application/json")
     public @ResponseBody
-    ResultEntity<Object> registerStep1(@RequestBody @Valid Register1 input, BindingResult bindingResult){
+    ResultEntity<Object> registerStep1(@RequestBody @Valid InRegister1 input, BindingResult bindingResult){
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
         	String output = registerService.registerStep1(input);
@@ -38,7 +38,7 @@ public class RegisterController extends BaseController {
     
     @PostMapping(value = "/register-step-2", consumes = "application/json")
     public @ResponseBody
-    ResultEntity<Object> registerStep2(@RequestBody @Valid Register2 input, BindingResult bindingResult){
+    ResultEntity<Object> registerStep2(@RequestBody @Valid InRegister2 input, BindingResult bindingResult){
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
         	String output = new String();
@@ -56,7 +56,7 @@ public class RegisterController extends BaseController {
     
     @PostMapping(value = "/register-step-3", consumes = "application/json")
     public @ResponseBody
-    ResultEntity<Object> registerStep3(@RequestBody @Valid Register3 input, BindingResult bindingResult){
+    ResultEntity<Object> registerStep3(@RequestBody @Valid InRegister3 input, BindingResult bindingResult){
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
         	registerService.registerStep3(input);

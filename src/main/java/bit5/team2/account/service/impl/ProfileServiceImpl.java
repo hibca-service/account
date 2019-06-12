@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import bit5.team2.account.model.entity.User;
-import bit5.team2.account.model.input.ChangeProfile;
+import bit5.team2.account.model.input.InChangeProfile;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.ProfileService;
 
@@ -13,7 +13,7 @@ public class ProfileServiceImpl implements ProfileService {
 	@Autowired
 	UserRepo userRepo;
 	
-	public int changeProfile(ChangeProfile input) {
+	public int changeProfile(InChangeProfile input) {
 		User user = userRepo.findByUsername(input.getUsername());
 		
 		if (input.getEmail() != null) {
