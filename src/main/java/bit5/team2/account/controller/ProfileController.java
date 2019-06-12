@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import bit5.team2.account.lib.BaseController;
 import bit5.team2.account.lib.ResultEntity;
 import bit5.team2.account.model.input.ChangeProfile;
-import bit5.team2.account.model.output.GetProfileOutput;
+import bit5.team2.account.model.output.OutGetProfile;
 import bit5.team2.account.service.GetProfileService;
 import bit5.team2.account.service.ProfileService;
 
@@ -50,7 +50,7 @@ public class ProfileController extends BaseController{
     ResultEntity<Object> changeProfile(@RequestParam String username , BindingResult bindingResult){
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
-        	GetProfileOutput output = getProfileService.getProfile(username);
+        	OutGetProfile output = getProfileService.getProfile(username);
         	if (output.equals(null))
         		return this.failed();
         	else

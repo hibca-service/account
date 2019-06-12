@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GetProfileOutput {
+public class OutGetProfile {
 	private String username;
 	private String name;
 	private String status;
