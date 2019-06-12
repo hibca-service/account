@@ -2,8 +2,8 @@ package bit5.team2.account.controller;
 
 import bit5.team2.account.lib.BaseController;
 import bit5.team2.account.lib.ResultEntity;
-import bit5.team2.account.model.input.Login;
-import bit5.team2.account.model.output.Token;
+import bit5.team2.account.model.input.InLogin;
+import bit5.team2.account.model.output.OutLogin;
 import bit5.team2.account.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -19,14 +19,14 @@ public class LoginController extends BaseController {
 
     @PostMapping(value = "/login", consumes = "application/json")
     public @ResponseBody
-    ResultEntity<Object> login(@RequestBody @Valid Login input, BindingResult bindingResult){
+    ResultEntity<Object> login(@RequestBody @Valid InLogin input, BindingResult bindingResult){
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
-            Token token = loginService.login(input.getUsername(),input.getPassword());
-            if (token == null) {
+            OutLogin output = loginService.login(input.getUsername(),input.getPassword());
+            if (output == null) {
                 return this.failed();
             } else {
-                return this.success(token);
+                return this.success(output);
             }
         }
         else {

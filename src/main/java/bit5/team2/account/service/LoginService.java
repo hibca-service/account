@@ -1,7 +1,7 @@
 package bit5.team2.account.service;
 
-import bit5.team2.account.model.output.Token;
+import bit5.team2.account.model.output.OutLogin;
 
 public interface LoginService {
-	Token login(String username, String password);
+	OutLogin login(String username, String password);
 }

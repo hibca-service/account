@@ -7,7 +7,7 @@ import javax.validation.constraints.*;
 
 @Getter
 @Setter
-public class Register1 {
+public class InRegister1 {
 	@Email
 	@NotEmpty
 	private String email;
