@@ -1,5 +1,6 @@
 package bit5.team2.account.service.impl;
 
+import bit5.team2.account.lib.BaseService;
 import bit5.team2.account.lib.JWT;
 import bit5.team2.account.model.entity.User;
 import bit5.team2.account.model.output.Token;
@@ -15,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 @Service
-public class LoginServiceImpl implements LoginService {
+public class LoginServiceImpl extends BaseService implements LoginService {
     @Autowired
     UserRepo userRepo;
 
@@ -27,7 +28,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Token login(String username, String password) {
-        String hashedPassword = this._hash(password);
+        String hashedPassword = this.hash(password);
         if (hashedPassword == null) {
             return null;
         }
@@ -35,37 +36,8 @@ public class LoginServiceImpl implements LoginService {
         Token output = this._loginMobile(username,hashedPassword);
         if (output == null) {
             return this._loginWeb(username,hashedPassword);
-        }
-        else {
+        } else {
             return output;
-        }
-    }
-
-    @Override
-    public void set() {
-        User user = new User();
-        user.setUsername("dharmawan");
-        user.setPassword(this._hash("123"));
-        userRepo.save(user);
-    }
-
-    private String _bytesToHex(byte[] hash) {
-        StringBuilder hexString = new StringBuilder();
-        for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(0xff & hash[i]);
-            if(hex.length() == 1) hexString.append('0');
-            hexString.append(hex);
-        }
-        return hexString.toString();
-    }
-
-    private String _hash(String password) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedhash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-            return _bytesToHex(encodedhash);
-        } catch (NoSuchAlgorithmException e) {
-            return null;
         }
     }
 
@@ -73,8 +45,7 @@ public class LoginServiceImpl implements LoginService {
         User user = userRepo.findByUsernameAndPassword(username,password);
         if (user == null) {
             return null;
-        }
-        else {
+        } else {
             JWT jwt = new JWT();
             HashMap<String, Object> map = new HashMap<>();
             map.put("userId",user.getId());

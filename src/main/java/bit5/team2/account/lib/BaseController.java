@@ -14,8 +14,7 @@ public class BaseController {
     protected ResultEntity<Object> checkToken(String authorization) {
         if (authorization == null || authorization.equals("")) {
             return this.unauthorized();
-        }
-        else {
+        } else {
             JWT jwt = new JWT();
             this.data = jwt.getdata(authorization);
             return null;

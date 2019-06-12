@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import bit5.team2.account.model.entity.User;
-import bit5.team2.account.model.input.ChangeProfileInput;
+import bit5.team2.account.model.input.ChangeProfile;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.ProfileService;
 
@@ -13,44 +13,42 @@ public class ProfileServiceImpl implements ProfileService {
 	@Autowired
 	UserRepo userRepo;
 	
-	public int changeProfile(ChangeProfileInput input) {
+	public int changeProfile(ChangeProfile input) {
 		User user = userRepo.findByUsername(input.getUsername());
 		
-		if (!(input.getEmail().equals(null))) {
+		if (input.getEmail() != null) {
 			if (userRepo.findByEmail(input.getEmail()) == null) {
 				user.setEmail(input.getEmail());
-			}
-			else {
+			} else {
 				return 1;
 			}
 		}
 		
-		if (!(input.getPhoneNumber().equals(null))) {
+		if (input.getPhoneNumber() != null) {
 			if (userRepo.findByPhoneNumber(input.getPhoneNumber()) == null) {
 				user.setPhoneNumber(input.getPhoneNumber());
-			} 
-			else {
+			} else {
 				return 1;
 			}
 		}
 		
-		if (!(input.getDateOfBirth().equals(null))) {
+		if (input.getDateOfBirth() != null) {
 			user.setDateOfBirth(input.getDateOfBirth());
 		}
 		
-		if (!(input.getName().equals(null))) {
+		if (input.getName() != null) {
 			user.setName(input.getName());
 		}
 		
-		if (!(input.getPassword().equals(null))) {
+		if (input.getPassword() != null) {
 			user.setPassword(input.getPassword());
 		}
 		
-		if (!(input.getPurpose().equals(null))) {
+		if (input.getPurpose() != null) {
 			user.setPurpose(input.getPurpose());
 		}
 		
-		if (input.isOa() == true) {
+		if (input.isOa()) {
 			user.setOa(true);
 		} else {
 			user.setOa(false);

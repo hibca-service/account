@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChangeProfileInput {
+public class ChangeProfile {
 	@NotEmpty
 	private String username; //buat cari data user yang mau diganti dari database
 	private String password;

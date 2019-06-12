@@ -26,11 +26,12 @@ public class VerificationController extends BaseController{
 	    	int output = verificationService.viaEmail(id);
 	    	if (output == 0) {
 	    		return this.success(null);
-	    	} 
-	    	else {
+	    	} else {
 	    		return this.failed();
 	    	}
 	    }
-	    else return errorInput;
+	    else {
+	    	return errorInput;
+		}
 	}
 }

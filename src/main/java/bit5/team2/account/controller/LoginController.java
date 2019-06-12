@@ -22,17 +22,15 @@ public class LoginController extends BaseController {
     ResultEntity<Object> login(@RequestBody @Valid Login input, BindingResult bindingResult){
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
-            loginService.set();
-
             Token token = loginService.login(input.getUsername(),input.getPassword());
             if (token == null) {
                 return this.failed();
-            }
-            else {
+            } else {
                 return this.success(token);
             }
         }
-        else return errorInput;
-
+        else {
+            return errorInput;
+        }
     }
 }

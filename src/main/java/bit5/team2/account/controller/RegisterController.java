@@ -25,14 +25,16 @@ public class RegisterController extends BaseController {
     ResultEntity<Object> registerStep1(@RequestBody @Valid Register1 input, BindingResult bindingResult){
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
-        	String output = new String();
-        	output = registerService.registerStep1(input);
-        	if (output == null)
-        		return this.failed();
-        	else
-        		return this.success(output);
+        	String output = registerService.registerStep1(input);
+        	if (output == null) {
+                return this.failed();
+            } else {
+                return this.success(output);
+            }
         }
-        else return errorInput;
+        else {
+            return errorInput;
+        }
     }
     
     @PostMapping(value = "/register-step-2", consumes = "application/json")
@@ -42,12 +44,15 @@ public class RegisterController extends BaseController {
         if (errorInput == null) {
         	String output = new String();
         	output = registerService.registerStep2(input);
-        	if (output == null)
-        		return this.failed();
-        	else
-        		return this.success(output);
+        	if (output == null) {
+                return this.failed();
+            } else {
+                return this.success(output);
+            }
         }
-        else return errorInput;
+        else {
+            return errorInput;
+        }
     }
     
     @PostMapping(value = "/register-step-3", consumes = "application/json")
@@ -58,6 +63,8 @@ public class RegisterController extends BaseController {
         	registerService.registerStep3(input);
             return this.success(null);
         }
-        else return errorInput;
+        else {
+            return errorInput;
+        }
     }
 }
