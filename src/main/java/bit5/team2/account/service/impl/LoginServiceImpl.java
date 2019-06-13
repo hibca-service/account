@@ -2,9 +2,11 @@ package bit5.team2.account.service.impl;
 
 import bit5.team2.account.lib.BaseService;
 import bit5.team2.account.lib.JWT;
+import bit5.team2.account.model.entity.Admin;
 import bit5.team2.account.model.entity.User;
 import bit5.team2.account.model.output.OutLogin;
 import bit5.team2.account.model.output.OutLoginAdmin;
+import bit5.team2.account.repo.AdminRepo;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ import java.util.HashMap;
 public class LoginServiceImpl extends BaseService implements LoginService {
     @Autowired
     UserRepo userRepo;
+    
+    @Autowired
+    AdminRepo adminRepo;
 
     @Value("${refresh_token_duration}")
     private int refreshTokenDuration;
@@ -78,6 +83,24 @@ public class LoginServiceImpl extends BaseService implements LoginService {
     }
 
     private OutLoginAdmin _loginWeb(String username, String password) {
-        return null;
+    	Admin admin = adminRepo.findByUsernameAndPassword(username, password);
+        if (admin == null) {
+            return null;
+        } else {
+            JWT jwt = new JWT();
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("userId",admin.getId());
+            map.put("username",username);
+            String refresh = jwt.generateToken(map,false,this.refreshTokenDuration);
+            map.put("superAdmin", admin.isSuperAdmin());
+            String access = jwt.generateToken(map,false,this.accessTokenDuration);
+
+            OutLoginAdmin token = new OutLoginAdmin();
+            token.setAccessToken(access);
+            token.setRefreshToken(refresh);
+            token.setSuperAdmin(admin.isSuperAdmin());
+
+            return token;
+        }
     }
 }
