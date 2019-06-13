@@ -31,6 +31,7 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 	 * return 8 = username already taken;
 	 * return 9 = phone number already verified;
 	 * return 10 = email already verified;
+	 * return 11 = email and phone already verified;
 	 * */
 	 
 	public int register (InRegister input) {
@@ -38,8 +39,6 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 		User checkEmail = userRepo.findByEmail(input.getEmail());
 		User checkPhoneNumber = userRepo.findByPhoneNumber(input.getPhoneNumber());
 		User checkUsername = userRepo.findByUsername(input.getUsername());
-		boolean isEmailVerified;
-		boolean isPhoneVerified;
 		Admin checkAdminUsername = adminRepo.findByUsername(input.getUsername());
 		String hashedPassword = this.hash(input.getPassword());
 		
@@ -48,26 +47,38 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 		} else if ( (checkEmail != null) && (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 2;
 		} else if ( (checkEmail != null) && (checkPhoneNumber != null) ) {
-			return 3;
+			boolean isEmailVerified = checkEmail.isEmailVerified();
+			boolean isPhoneVerified = checkPhoneNumber.isPhoneVerified();
+			
+			if ( (isEmailVerified == true) && (isPhoneVerified == true) ) {
+				return 11; // email & PN registered and validated
+			}
+			
+//			return 3; // email & PN registered but not validated
 		} else if ( (checkEmail != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 4;
 		} else if ( (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 5;
 		} else if ( (checkEmail != null) ) {
-			return 6;
+			boolean isEmailVerified = checkEmail.isEmailVerified();
+			
+			if (isEmailVerified == true) {
+				return 10; // email registered and validated
+			}
+			
+//			return 6; // email registered but not validated
+			
 		} else if ( (checkPhoneNumber != null) ) {
-			return 7;
+			boolean isPhoneVerified = checkPhoneNumber.isPhoneVerified();
+			
+			if (isPhoneVerified == true) {
+				return 9; // PN registered and validated
+			}
+			
+//			return 7; // PN registered but not validated
+			
 		} else if ( (checkUsername != null && checkAdminUsername != null) ) {
 			return 8;
-		}
-		
-		isEmailVerified = checkEmail.isEmailVerified();
-		isPhoneVerified = checkPhoneNumber.isPhoneVerified();
-		
-		if (isPhoneVerified == true) {
-			return 9;
-		} else if (isEmailVerified == true) {
-			return 10;
 		}
 		
 		user.setId(String.valueOf(userRepo.nextId()));
@@ -75,6 +86,8 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 		user.setPhoneNumber(input.getPhoneNumber());
 		user.setOa(input.isOa());
 		user.setUsername(input.getUsername());
+		user.setEmailVerified(false);
+		user.setPhoneVerified(false);
         user.setPassword(hashedPassword);
 		
         userRepo.save(user);
@@ -142,3 +155,9 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 //
 //userRepo.save(user);
 //}
+
+//User checkPhoneNumberIfEmailValid = userRepo.findByPhoneNumber(input.getPhoneNumber());
+//if (checkPhoneNumberIfEmailValid != null) {
+//	return 12; // if email valid and phone number is taken.
+//}
+
