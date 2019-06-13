@@ -3,8 +3,10 @@ package bit5.team2.account.service.impl;
 import bit5.team2.account.lib.BaseService;
 import bit5.team2.account.model.entity.Admin;
 import bit5.team2.account.model.entity.User;
+import bit5.team2.account.model.entity.UserFollow;
 import bit5.team2.account.model.input.InRegister;
 import bit5.team2.account.repo.AdminRepo;
+import bit5.team2.account.repo.UserFollowRepo;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 	
 	@Autowired
 	AdminRepo adminRepo;
+	
+	@Autowired
+	UserFollowRepo userFollowRepo;
 	
 	/*
 	 * List output if else case :
@@ -91,6 +96,15 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 			user.setEmailVerified(false);
 			user.setPhoneVerified(false);
 	        user.setPassword(hashedPassword);
+	        
+	        UserFollow userFollow = new UserFollow();
+	        userFollow.setFollowers(0);
+	        userFollow.setFollowing(0);
+	        userFollow.setId(String.valueOf(userRepo.nextId()));
+	        userFollow.setName(null);
+	        userFollow.setUsername(input.getUsername());
+			
+	        userFollowRepo.save(userFollow);
 			
 	        userRepo.save(user);
 		} else {
@@ -102,10 +116,15 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 			registeredUser.setPhoneVerified(false);
 			registeredUser.setPassword(hashedPassword);
 			
+			UserFollow userFollow = userFollowRepo.findByUsername(input.getUsername());
+			userFollow.setFollowers(0);
+	        userFollow.setFollowing(0);
+	        userFollow.setName(null);
+	        
+	        userFollowRepo.save(userFollow);
 	        userRepo.save(registeredUser);
 		}
-		
-		
+        
 		return 0;
 	}
 }
