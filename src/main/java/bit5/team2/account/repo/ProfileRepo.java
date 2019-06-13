@@ -2,8 +2,11 @@ package bit5.team2.account.repo;
 
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Repository;
+
 import bit5.team2.account.model.entity.Profile;
 
+@Repository
 public class ProfileRepo {
 	private ArrayList<Profile> profiles;
 	

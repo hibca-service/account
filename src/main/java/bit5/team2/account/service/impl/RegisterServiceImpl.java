@@ -1,9 +1,10 @@
 package bit5.team2.account.service.impl;
 
 import bit5.team2.account.lib.BaseService;
-
+import bit5.team2.account.model.entity.Admin;
 import bit5.team2.account.model.entity.User;
 import bit5.team2.account.model.input.InRegister;
+import bit5.team2.account.repo.AdminRepo;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 public class RegisterServiceImpl extends BaseService implements RegisterService {
 	@Autowired
 	UserRepo userRepo;
+	
+	@Autowired
+	AdminRepo adminRepo;
 	
 	/*
 	 * List output if else case :
@@ -36,23 +40,24 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 		User checkUsername = userRepo.findByUsername(input.getUsername());
 		boolean isEmailVerified;
 		boolean isPhoneVerified;
+		Admin checkAdminUsername = adminRepo.findByUsername(input.getUsername());
 		String hashedPassword = this.hash(input.getPassword());
 		
 		if (hashedPassword == null) {
 			return 1;
-		} else if ( (checkEmail != null) && (checkPhoneNumber != null) && (checkUsername != null) ) {
+		} else if ( (checkEmail != null) && (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 2;
 		} else if ( (checkEmail != null) && (checkPhoneNumber != null) ) {
 			return 3;
-		} else if ( (checkEmail != null) && (checkUsername != null) ) {
+		} else if ( (checkEmail != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 4;
-		} else if ( (checkPhoneNumber != null) && (checkUsername != null) ) {
+		} else if ( (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 5;
 		} else if ( (checkEmail != null) ) {
 			return 6;
 		} else if ( (checkPhoneNumber != null) ) {
 			return 7;
-		} else if ( (checkUsername != null) ) {
+		} else if ( (checkUsername != null && checkAdminUsername != null) ) {
 			return 8;
 		}
 		

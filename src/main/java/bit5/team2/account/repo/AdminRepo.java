@@ -2,8 +2,11 @@ package bit5.team2.account.repo;
 
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Repository;
+
 import bit5.team2.account.model.entity.Admin;
 
+@Repository
 public class AdminRepo {
 	private ArrayList<Admin> admins;
 
@@ -39,5 +42,14 @@ public class AdminRepo {
             }
         }
         return null;
+    }
+    
+    public Admin findByUsername(String username) {
+    	for (Admin admin : admins) {
+    		if (admin.getUsername().equals(username)) {
+    			return admin;
+    		}
+    	}
+    	return null;
     }
 }
