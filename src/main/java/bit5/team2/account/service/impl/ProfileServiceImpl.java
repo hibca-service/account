@@ -3,11 +3,11 @@ package bit5.team2.account.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import bit5.team2.account.model.entity.Profile;
+import bit5.team2.account.model.entity.UserFollow;
 import bit5.team2.account.model.entity.User;
 import bit5.team2.account.model.input.InChangeProfile;
 import bit5.team2.account.model.output.OutGetProfile;
-import bit5.team2.account.repo.ProfileRepo;
+import bit5.team2.account.repo.UserFollowRepo;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.ProfileService;
 
@@ -17,7 +17,7 @@ public class ProfileServiceImpl implements ProfileService {
 	UserRepo userRepo;
 	
 	@Autowired
-	ProfileRepo profileRepo;
+	UserFollowRepo userFollowRepo;
 	
 	public int changeProfile(InChangeProfile input) {
 		User user = userRepo.findByUsername(input.getUsername());
@@ -63,15 +63,15 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 	
 	public OutGetProfile getProfile(String username) {
-		Profile profile = profileRepo.findByUsername(username);
+		UserFollow userFollow = userFollowRepo.findByUsername(username);
 		OutGetProfile output = new OutGetProfile();
 		
-		if ( profile != null ) {
-			output.setFollowers(profile.getFollowers());
-			output.setFollowing(profile.getFollowing());
-			output.setName(profile.getName());
-			output.setStatus(profile.getStatus());
-			output.setUsername(profile.getUsername());
+		if ( userFollow != null ) {
+			output.setFollowers(userFollow.getFollowers());
+			output.setFollowing(userFollow.getFollowing());
+			output.setName(userFollow.getName());
+			output.setStatus(userFollow.getStatus());
+			output.setUsername(userFollow.getUsername());
 			
 			return output;
 		} 
