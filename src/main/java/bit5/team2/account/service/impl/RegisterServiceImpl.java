@@ -29,9 +29,6 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 	 * return 6 = email already taken; 
 	 * return 7 = phone number already taken;
 	 * return 8 = username already taken;
-	 * return 9 = phone number already verified;
-	 * return 10 = email already verified;
-	 * return 11 = email and phone already verified;
 	 * */
 	 
 	public int register (InRegister input) {
@@ -51,10 +48,9 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 			boolean isPhoneVerified = checkPhoneNumber.isPhoneVerified();
 			
 			if ( (isEmailVerified == true) && (isPhoneVerified == true) ) {
-				return 11; // email & PN registered and validated
+				return 3; // email & PN registered and validated
 			}
 			
-//			return 3; // email & PN registered but not validated
 		} else if ( (checkEmail != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 4;
 		} else if ( (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
@@ -63,19 +59,15 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 			boolean isEmailVerified = checkEmail.isEmailVerified();
 			
 			if (isEmailVerified == true) {
-				return 10; // email registered and validated
+				return 6; // email registered and validated
 			}
-			
-//			return 6; // email registered but not validated
 			
 		} else if ( (checkPhoneNumber != null) ) {
 			boolean isPhoneVerified = checkPhoneNumber.isPhoneVerified();
 			
 			if (isPhoneVerified == true) {
-				return 9; // PN registered and validated
+				return 7; // PN registered and validated
 			}
-			
-//			return 7; // PN registered but not validated
 			
 		} else if ( (checkUsername != null && checkAdminUsername != null) ) {
 			return 8;

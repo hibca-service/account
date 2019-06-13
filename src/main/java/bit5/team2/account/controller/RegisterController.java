@@ -43,10 +43,6 @@ public class RegisterController extends BaseController {
         		return this.failed("phone number already taken");
         	} else if ( output == 8 ) {
         		return this.failed("username already taken");
-        	} else if ( output == 9 ) {
-        		return this.failed("Phone number already verified");
-        	} else if ( output == 10 ) {
-        		return this.failed("Email already verified");
         	}
         	return this.success(null);
         }
