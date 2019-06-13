@@ -33,6 +33,8 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 	 
 	public int register (InRegister input) {
 		User user = new User();
+		User registeredUser = new User();
+		int flag = 0;
 		User checkEmail = userRepo.findByEmail(input.getEmail());
 		User checkPhoneNumber = userRepo.findByPhoneNumber(input.getPhoneNumber());
 		User checkUsername = userRepo.findByUsername(input.getUsername());
@@ -51,6 +53,8 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 				return 3; // email & PN registered and validated
 			}
 			
+			flag = 1;
+			registeredUser = checkEmail;
 		} else if ( (checkEmail != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 4;
 		} else if ( (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
@@ -62,6 +66,9 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 				return 6; // email registered and validated
 			}
 			
+			flag = 1;
+			registeredUser = checkEmail;
+			
 		} else if ( (checkPhoneNumber != null) ) {
 			boolean isPhoneVerified = checkPhoneNumber.isPhoneVerified();
 			
@@ -69,20 +76,35 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 				return 7; // PN registered and validated
 			}
 			
+			flag = 1;
+			registeredUser = checkPhoneNumber;
 		} else if ( (checkUsername != null && checkAdminUsername != null) ) {
 			return 8;
 		}
 		
-		user.setId(String.valueOf(userRepo.nextId()));
-		user.setEmail(input.getEmail());
-		user.setPhoneNumber(input.getPhoneNumber());
-		user.setOa(input.isOa());
-		user.setUsername(input.getUsername());
-		user.setEmailVerified(false);
-		user.setPhoneVerified(false);
-        user.setPassword(hashedPassword);
+		if (flag == 0) {
+			user.setId(String.valueOf(userRepo.nextId()));
+			user.setEmail(input.getEmail());
+			user.setPhoneNumber(input.getPhoneNumber());
+			user.setOa(input.isOa());
+			user.setUsername(input.getUsername());
+			user.setEmailVerified(false);
+			user.setPhoneVerified(false);
+	        user.setPassword(hashedPassword);
+			
+	        userRepo.save(user);
+		} else {
+			registeredUser.setEmail(input.getEmail());
+			registeredUser.setPhoneNumber(input.getPhoneNumber());
+			registeredUser.setOa(input.isOa());
+			registeredUser.setUsername(input.getUsername());
+			registeredUser.setEmailVerified(false);
+			registeredUser.setPhoneVerified(false);
+			registeredUser.setPassword(hashedPassword);
+			
+	        userRepo.save(registeredUser);
+		}
 		
-        userRepo.save(user);
 		
 		return 0;
 	}

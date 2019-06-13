@@ -43,16 +43,12 @@ public class ProfileController extends BaseController{
 	
 	@GetMapping (value = "/get-profile")
 	public @ResponseBody
-    ResultEntity<Object> changeProfile(@RequestParam String username , BindingResult bindingResult){
-        ResultEntity<Object> errorInput = this.validateInput(bindingResult);
-        if (errorInput == null) {
-        	OutGetProfile output = profileService.getProfile(username);
-        	if (output.equals(null)) {
-        		return this.failed();
-        	} else {
-        		return this.success(output);
-        	}	
-        }
-        else return errorInput;
+    ResultEntity<Object> changeProfile(@RequestParam String username){
+        OutGetProfile output = profileService.getProfile(username);
+    	if (output == null) {
+    		return this.failed();
+    	} else {
+    		return this.success(output);
+    	}	
     }
 }
