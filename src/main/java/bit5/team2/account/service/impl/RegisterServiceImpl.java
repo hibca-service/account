@@ -48,42 +48,46 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 		
 		if (hashedPassword == null) {
 			return 1;
-		} else if ( (checkEmail != null) && (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
+		} 
+		
+		if ( (checkEmail != null) && (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 2;
-		} else if ( (checkEmail != null) && (checkPhoneNumber != null) ) {
-			boolean isEmailVerified = checkEmail.isEmailVerified();
-			boolean isPhoneVerified = checkPhoneNumber.isPhoneVerified();
+		} 
+		
+		if ( (checkEmail != null) && (checkPhoneNumber != null) ) {
 			
-			if ( (isEmailVerified == true) && (isPhoneVerified == true) ) {
+			if ( (checkEmail.isEmailVerified() == true) && (checkPhoneNumber.isPhoneVerified() == true) ) {
 				return 3; // email & PN registered and validated
 			}
-			
 			flag = 1;
 			registeredUser = checkEmail;
-		} else if ( (checkEmail != null) && (checkUsername != null && checkAdminUsername != null) ) {
+		} 
+		
+		if ( (checkEmail != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 4;
-		} else if ( (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
+		} 
+
+		if ( (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 5;
-		} else if ( (checkEmail != null) ) {
-			boolean isEmailVerified = checkEmail.isEmailVerified();
-			
-			if (isEmailVerified == true) {
+		} 
+
+		if ( (checkEmail != null) ) {
+			if (checkEmail.isEmailVerified() == true) {
 				return 6; // email registered and validated
 			}
-			
 			flag = 1;
 			registeredUser = checkEmail;
-			
-		} else if ( (checkPhoneNumber != null) ) {
-			boolean isPhoneVerified = checkPhoneNumber.isPhoneVerified();
-			
-			if (isPhoneVerified == true) {
+		} 
+
+		if ( (checkPhoneNumber != null) ) {
+			if (checkPhoneNumber.isPhoneVerified() == true) {
 				return 7; // PN registered and validated
 			}
-			
 			flag = 1;
 			registeredUser = checkPhoneNumber;
-		} else if ( (checkUsername != null && checkAdminUsername != null) ) {
+		}
+
+		if ( (checkUsername != null && checkAdminUsername != null) ) {
 			return 8;
 		}
 		
@@ -106,15 +110,12 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 	        userFollow.setUsername(input.getUsername());
 			
 	        userFollowRepo.save(userFollow);
-			
-	        userRepo.save(user);
+			userRepo.save(user);
 		} else {
 			registeredUser.setEmail(input.getEmail());
 			registeredUser.setPhoneNumber(input.getPhoneNumber());
 			registeredUser.setOa(input.isOa());
 			registeredUser.setUsername(input.getUsername());
-			registeredUser.setEmailVerified(false);
-			registeredUser.setPhoneVerified(false);
 			registeredUser.setPassword(hashedPassword);
 			
 			UserFollow userFollow = userFollowRepo.findByUsername(input.getUsername());
@@ -124,7 +125,6 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 	        userFollow.setName(null);
 	        
 	        userFollowRepo.save(userFollow);
-	        
 	        userRepo.save(registeredUser);
 		}
         

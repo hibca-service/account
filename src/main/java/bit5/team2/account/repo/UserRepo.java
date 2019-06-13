@@ -55,7 +55,7 @@ public class UserRepo {
     
     public User findByPhoneNumber(String phoneNumber) {
     	for (User user : users) {
-    		if (user.getEmail().equals(phoneNumber)) {
+    		if (user.getPhoneNumber().equals(phoneNumber)) {
     			return user;
     		}
     	}

@@ -15,8 +15,10 @@ public class VerificationServiceImpl implements VerificationService {
 	public int viaEmail(String id) {
 		User user = userRepo.findById(id);
 		if (user != null) {
-			user.setEmailVerified(true);
-			return 0;
+			if (user.isEmailVerified() == false) {
+				user.setEmailVerified(true);
+				return 0;
+			}
 		}
 		return 1;
 	}
@@ -24,8 +26,10 @@ public class VerificationServiceImpl implements VerificationService {
 	public int viaPhone(String id) {
 		User user = userRepo.findById(id);
 		if (user != null) {
-			user.setPhoneVerified(true);
-			return 0;
+			if (user.isPhoneVerified() == false) {
+				user.setPhoneVerified(true);
+				return 0;
+			}
 		}
 		return 1;
 	}
