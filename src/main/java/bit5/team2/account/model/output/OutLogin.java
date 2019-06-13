@@ -8,4 +8,5 @@ import lombok.Setter;
 public class OutLogin {
     private String accessToken;
     private String refreshToken;
+    private boolean superAdmin;
 }

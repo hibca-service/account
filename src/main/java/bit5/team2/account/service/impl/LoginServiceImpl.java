@@ -1,11 +1,11 @@
 package bit5.team2.account.service.impl;
 
 import bit5.team2.account.lib.BaseService;
+
 import bit5.team2.account.lib.JWT;
 import bit5.team2.account.model.entity.Admin;
 import bit5.team2.account.model.entity.User;
 import bit5.team2.account.model.output.OutLogin;
-import bit5.team2.account.model.output.OutLoginAdmin;
 import bit5.team2.account.repo.AdminRepo;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.LoginService;
@@ -36,23 +36,15 @@ public class LoginServiceImpl extends BaseService implements LoginService {
             return null;
         }
 
-        OutLogin output = this._loginMobile(username,hashedPassword);
+        //check is the user admin first then check regular user
+        OutLogin output = this._loginWeb(username,hashedPassword);
         if (output != null) {
         	return output;
-        }
-        
-        return null;
-    }
-    
-    public OutLoginAdmin loginAdmin(String username, String password) {
-    	String hashedPassword = this.hash(password);
-        if (hashedPassword == null) {
-            return null;
-        }
-
-        OutLoginAdmin output = this._loginWeb(username,hashedPassword);
-        if (output != null) {
-        	return output;
+        } else {
+        	output = this._loginMobile(username,hashedPassword);
+        	if (output != null) {
+        		return output;
+        	}
         }
         
         return null;
@@ -77,12 +69,13 @@ public class LoginServiceImpl extends BaseService implements LoginService {
             OutLogin token = new OutLogin();
             token.setAccessToken(access);
             token.setRefreshToken(refresh);
+            token.setSuperAdmin(false);
 
             return token;
         }
     }
 
-    private OutLoginAdmin _loginWeb(String username, String password) {
+    private OutLogin _loginWeb(String username, String password) {
     	Admin admin = adminRepo.findByUsernameAndPassword(username, password);
         if (admin == null) {
             return null;
@@ -95,7 +88,7 @@ public class LoginServiceImpl extends BaseService implements LoginService {
             map.put("superAdmin", admin.isSuperAdmin());
             String access = jwt.generateToken(map,false,this.accessTokenDuration);
 
-            OutLoginAdmin token = new OutLoginAdmin();
+            OutLogin token = new OutLogin();
             token.setAccessToken(access);
             token.setRefreshToken(refresh);
             token.setSuperAdmin(admin.isSuperAdmin());
