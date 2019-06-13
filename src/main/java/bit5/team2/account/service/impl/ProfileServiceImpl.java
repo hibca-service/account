@@ -21,8 +21,9 @@ public class ProfileServiceImpl implements ProfileService {
 	
 	public int changeProfile(InChangeProfile input) {
 		User user = userRepo.findByUsername(input.getUsername());
+		UserFollow userFollow = userFollowRepo.findByUsername(input.getUsername());
 		
-		if (input.getEmail() != null) {
+		if ( (input.getEmail() != null) && (input.getEmail() != "") ) {
 			if (userRepo.findByEmail(input.getEmail()) == null) {
 				user.setEmail(input.getEmail());
 			} else {
@@ -30,7 +31,7 @@ public class ProfileServiceImpl implements ProfileService {
 			}
 		}
 		
-		if (input.getPhoneNumber() != null) {
+		if ( (input.getPhoneNumber() != null) && (input.getPhoneNumber() != "") ) {
 			if (userRepo.findByPhoneNumber(input.getPhoneNumber()) == null) {
 				user.setPhoneNumber(input.getPhoneNumber());
 			} else {
@@ -38,27 +39,32 @@ public class ProfileServiceImpl implements ProfileService {
 			}
 		}
 		
-		if (input.getDateOfBirth() != null) {
+		if ( (input.getDateOfBirth() != null) ) {
 			user.setDateOfBirth(input.getDateOfBirth());
 		}
 		
-		if (input.getName() != null) {
+		if ((input.getName() != null) && (input.getName() != "")) {
 			user.setName(input.getName());
 		}
 		
-		if (input.getPassword() != null) {
+		if ((input.getPassword() != null) && (input.getPassword() != "")) {
 			user.setPassword(input.getPassword());
 		}
 		
-		if (input.getPurpose() != null) {
+		if ((input.getPurpose() != null) && (input.getPurpose() != "")) {
 			user.setPurpose(input.getPurpose());
 		}
 		
-		if (input.isOa()) {
+		if (input.isOa() == true) {
 			user.setOa(true);
 		} else {
 			user.setOa(false);
 		}
+		
+		if ((input.getStatus() != null) && (input.getStatus() != "")) {
+			userFollow.setStatus(input.getStatus());
+		}
+		
 		return 0;
 	}
 	

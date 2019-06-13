@@ -102,6 +102,7 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 	        userFollow.setFollowing(0);
 	        userFollow.setId(String.valueOf(userRepo.nextId()));
 	        userFollow.setName(null);
+	        userFollow.setStatus("...");
 	        userFollow.setUsername(input.getUsername());
 			
 	        userFollowRepo.save(userFollow);
@@ -119,9 +120,11 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 			UserFollow userFollow = userFollowRepo.findByUsername(input.getUsername());
 			userFollow.setFollowers(0);
 	        userFollow.setFollowing(0);
+	        userFollow.setStatus("...");
 	        userFollow.setName(null);
 	        
 	        userFollowRepo.save(userFollow);
+	        
 	        userRepo.save(registeredUser);
 		}
         
