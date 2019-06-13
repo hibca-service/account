@@ -1,9 +1,12 @@
 package bit5.team2.account.service.impl;
 
 import bit5.team2.account.lib.BaseService;
-
+import bit5.team2.account.model.entity.Admin;
 import bit5.team2.account.model.entity.User;
+import bit5.team2.account.model.entity.UserFollow;
 import bit5.team2.account.model.input.InRegister;
+import bit5.team2.account.repo.AdminRepo;
+import bit5.team2.account.repo.UserFollowRepo;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,12 @@ import org.springframework.stereotype.Service;
 public class RegisterServiceImpl extends BaseService implements RegisterService {
 	@Autowired
 	UserRepo userRepo;
+	
+	@Autowired
+	AdminRepo adminRepo;
+	
+	@Autowired
+	UserFollowRepo userFollowRepo;
 	
 	/*
 	 * List output if else case :
@@ -25,55 +34,100 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 	 * return 6 = email already taken; 
 	 * return 7 = phone number already taken;
 	 * return 8 = username already taken;
-	 * return 9 = phone number already verified;
-	 * return 10 = email already verified;
 	 * */
 	 
 	public int register (InRegister input) {
 		User user = new User();
+		User registeredUser = new User();
+		int flag = 0;
 		User checkEmail = userRepo.findByEmail(input.getEmail());
 		User checkPhoneNumber = userRepo.findByPhoneNumber(input.getPhoneNumber());
 		User checkUsername = userRepo.findByUsername(input.getUsername());
-		boolean isEmailVerified;
-		boolean isPhoneVerified;
+		Admin checkAdminUsername = adminRepo.findByUsername(input.getUsername());
 		String hashedPassword = this.hash(input.getPassword());
 		
 		if (hashedPassword == null) {
 			return 1;
-		} else if ( (checkEmail != null) && (checkPhoneNumber != null) && (checkUsername != null) ) {
+		} 
+		
+		if ( (checkEmail != null) && (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 2;
-		} else if ( (checkEmail != null) && (checkPhoneNumber != null) ) {
-			return 3;
-		} else if ( (checkEmail != null) && (checkUsername != null) ) {
+		} 
+		
+		if ( (checkEmail != null) && (checkPhoneNumber != null) ) {
+			
+			if ( (checkEmail.isEmailVerified() == true) && (checkPhoneNumber.isPhoneVerified() == true) ) {
+				return 3; // email & PN registered and validated
+			}
+			flag = 1;
+			registeredUser = checkEmail;
+		} 
+		
+		if ( (checkEmail != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 4;
-		} else if ( (checkPhoneNumber != null) && (checkUsername != null) ) {
+		} 
+
+		if ( (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
 			return 5;
-		} else if ( (checkEmail != null) ) {
-			return 6;
-		} else if ( (checkPhoneNumber != null) ) {
-			return 7;
-		} else if ( (checkUsername != null) ) {
+		} 
+
+		if ( (checkEmail != null) ) {
+			if (checkEmail.isEmailVerified() == true) {
+				return 6; // email registered and validated
+			}
+			flag = 1;
+			registeredUser = checkEmail;
+		} 
+
+		if ( (checkPhoneNumber != null) ) {
+			if (checkPhoneNumber.isPhoneVerified() == true) {
+				return 7; // PN registered and validated
+			}
+			flag = 1;
+			registeredUser = checkPhoneNumber;
+		}
+
+		if ( (checkUsername != null && checkAdminUsername != null) ) {
 			return 8;
 		}
 		
-		isEmailVerified = checkEmail.isEmailVerified();
-		isPhoneVerified = checkPhoneNumber.isPhoneVerified();
-		
-		if (isPhoneVerified == true) {
-			return 9;
-		} else if (isEmailVerified == true) {
-			return 10;
+		if (flag == 0) {
+			user.setId(String.valueOf(userRepo.nextId()));
+			user.setEmail(input.getEmail());
+			user.setPhoneNumber(input.getPhoneNumber());
+			user.setOa(input.isOa());
+			user.setUsername(input.getUsername());
+			user.setEmailVerified(false);
+			user.setPhoneVerified(false);
+	        user.setPassword(hashedPassword);
+	        
+	        UserFollow userFollow = new UserFollow();
+	        userFollow.setFollowers(0);
+	        userFollow.setFollowing(0);
+	        userFollow.setId(String.valueOf(userRepo.nextId()));
+	        userFollow.setName(null);
+	        userFollow.setStatus("...");
+	        userFollow.setUsername(input.getUsername());
+			
+	        userFollowRepo.save(userFollow);
+			userRepo.save(user);
+		} else {
+			registeredUser.setEmail(input.getEmail());
+			registeredUser.setPhoneNumber(input.getPhoneNumber());
+			registeredUser.setOa(input.isOa());
+			registeredUser.setUsername(input.getUsername());
+			registeredUser.setPassword(hashedPassword);
+			
+			UserFollow userFollow = userFollowRepo.findByUsername(input.getUsername());
+			userFollow.setFollowers(0);
+	        userFollow.setFollowing(0);
+	        userFollow.setStatus("...");
+	        userFollow.setName(null);
+	        
+	        userFollowRepo.save(userFollow);
+	        userRepo.save(registeredUser);
 		}
-		
-		user.setId(String.valueOf(userRepo.nextId()));
-		user.setEmail(input.getEmail());
-		user.setPhoneNumber(input.getPhoneNumber());
-		user.setOa(input.isOa());
-		user.setUsername(input.getUsername());
-        user.setPassword(hashedPassword);
-		
-        userRepo.save(user);
-		
+        
 		return 0;
 	}
 }
@@ -137,3 +191,9 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 //
 //userRepo.save(user);
 //}
+
+//User checkPhoneNumberIfEmailValid = userRepo.findByPhoneNumber(input.getPhoneNumber());
+//if (checkPhoneNumberIfEmailValid != null) {
+//	return 12; // if email valid and phone number is taken.
+//}
+

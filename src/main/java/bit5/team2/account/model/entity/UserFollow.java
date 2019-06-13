@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Profile {
+public class UserFollow {
 	private String username;
 	private String id;
 	private String name;

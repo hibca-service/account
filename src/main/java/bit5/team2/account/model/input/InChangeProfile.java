@@ -22,4 +22,5 @@ public class InChangeProfile {
 	private Date dateOfBirth;
 	private String purpose;
 	private boolean oa;
+	private String status;
 }
