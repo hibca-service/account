@@ -101,6 +101,12 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 			user.setPhoneVerified(false);
 	        user.setPassword(hashedPassword);
 	        
+//	        System.out.println(input.getEmail());
+//	        System.out.println(input.getPassword());
+//	        System.out.println(input.getPhoneNumber());
+//	        System.out.println(input.getUsername());
+//	        System.out.println(input.isOa());
+	        
 	        UserFollow userFollow = new UserFollow();
 	        userFollow.setFollowers(0);
 	        userFollow.setFollowing(0);
