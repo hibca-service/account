@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,8 +27,13 @@ public class ProfileController extends BaseController{
 	
 	@PostMapping(value = "/change-profile", consumes = "application/json")
     public @ResponseBody
-    ResultEntity<Object> changeProfile(@RequestBody @Valid InChangeProfile input, BindingResult bindingResult){
+    ResultEntity<Object> changeProfile(@RequestHeader String Authorization, 
+    		@RequestBody @Valid InChangeProfile input, BindingResult bindingResult){
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
+        this.checkToken(Authorization);
+        if (this.data == null) {
+        	return this.unauthorized();
+        }
         if (errorInput == null) {
         	int output = profileService.changeProfile(input);
         	if (output == 0) {
@@ -43,8 +49,13 @@ public class ProfileController extends BaseController{
 	
 	@GetMapping (value = "/get-profile")
 	public @ResponseBody
-    ResultEntity<Object> changeProfile(@RequestParam String username){
+    ResultEntity<Object> changeProfile(@RequestHeader String Authorization, 
+    		@RequestParam String username){
         OutGetProfile output = profileService.getProfile(username);
+        this.checkToken(Authorization);
+        if (this.data == null) {
+        	return this.unauthorized();
+        }
     	if (output == null) {
     		return this.failed();
     	} else {
