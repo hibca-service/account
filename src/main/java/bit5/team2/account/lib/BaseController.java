@@ -2,22 +2,40 @@ package bit5.team2.account.lib;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class BaseController {
     @Value("${show_error_input}")
     Boolean showError;
-
+    
     public Map<String, Object> data = null;
 
-    protected ResultEntity<Object> checkToken(String authorization) {
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    protected ResultEntity<Object> handleErrorParam(MissingServletRequestParameterException e){
+    	return this.failed();
+    }
+    
+    protected ResultEntity<Object> unauthorizedUser(HttpServletRequest request){
+    	String authorization = request.getHeader("Authorization");
+    	if (this.tokenValid(authorization)) {
+    		return null;
+    	} else {
+    		return this.unauthorized();
+    	}
+    }
+    
+    protected boolean tokenValid(String authorization) {
         if (authorization == null || authorization.equals("")) {
-            return this.unauthorized();
+            return false;
         } else {
             JWT jwt = new JWT();
             this.data = jwt.getdata(authorization);
-            return null;
+            return ! (this.data == null);
         }
     }
 

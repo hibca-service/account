@@ -1,5 +1,6 @@
 package bit5.team2.account.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,14 @@ public class ProfileController extends BaseController{
 	
 	@PostMapping(value = "/change-profile", consumes = "application/json")
     public @ResponseBody
-    ResultEntity<Object> changeProfile(@RequestHeader String Authorization, 
+    ResultEntity<Object> changeProfile(HttpServletRequest request, 
     		@RequestBody @Valid InChangeProfile input, BindingResult bindingResult){
+		ResultEntity<Object> err = this.unauthorizedUser(request);
+		if (err != null) {
+			return err;
+		}
+		
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
-        this.checkToken(Authorization);
-        if (this.data == null) {
-        	return this.unauthorized();
-        }
         if (errorInput == null) {
         	int output = profileService.changeProfile(input);
         	if (output == 0) {
@@ -49,13 +51,15 @@ public class ProfileController extends BaseController{
 	
 	@GetMapping (value = "/get-profile")
 	public @ResponseBody
-    ResultEntity<Object> changeProfile(@RequestHeader String Authorization, 
+    ResultEntity<Object> changeProfile(HttpServletRequest request,
     		@RequestParam String username){
+		ResultEntity<Object> err = this.unauthorizedUser(request);
+		if (err != null) {
+			return err;
+		}
+		
         OutGetProfile output = profileService.getProfile(username);
-        this.checkToken(Authorization);
-        if (this.data == null) {
-        	return this.unauthorized();
-        }
+        
     	if (output == null) {
     		return this.failed();
     	} else {

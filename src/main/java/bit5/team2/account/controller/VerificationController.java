@@ -23,6 +23,7 @@ public class VerificationController extends BaseController{
 	
 	@GetMapping(value = "/via-email")
 	public @ResponseBody ResultEntity<Object> viaEmail(@RequestParam String id) {
+		System.out.println("="+id+"=");
 		int output = verificationService.viaEmail(id);
     	if (output == 0) {
     		return this.success(null);

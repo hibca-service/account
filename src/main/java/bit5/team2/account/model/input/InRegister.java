@@ -1,10 +1,16 @@
 package bit5.team2.account.model.input;
 
+import java.sql.Date;
+
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +28,7 @@ public class InRegister {
 	private String phoneNumber;
 
     @NotNull
+    @AssertTrue
 	private boolean oa;
     
     @NotEmpty
@@ -29,4 +36,8 @@ public class InRegister {
 
 	@NotEmpty
 	private String password;
+	
+	//////////////////
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Date dateOfBirth;
 }
