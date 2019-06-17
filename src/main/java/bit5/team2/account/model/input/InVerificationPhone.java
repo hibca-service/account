@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InVerificationPhone {
-	private String id;
+	private String userId;
 	private String firebaseToken;
-	private String firebaseUID;
+	private String firebaseUUID;
 }

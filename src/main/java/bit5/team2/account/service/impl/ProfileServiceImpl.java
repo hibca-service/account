@@ -1,87 +1,64 @@
 package bit5.team2.account.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import bit5.team2.account.model.entity.UserFollow;
-import bit5.team2.account.model.entity.User;
+import bit5.team2.account.model.FollowObject;
 import bit5.team2.account.model.input.InChangeProfile;
 import bit5.team2.account.model.output.OutGetProfile;
 import bit5.team2.account.repo.UserFollowRepo;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.ProfileService;
+import bit5.team2.library.base.BaseService;
+import bit5.team2.library.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.Optional;
 
 @Service
-public class ProfileServiceImpl implements ProfileService {
+public class ProfileServiceImpl extends BaseService implements ProfileService {
 	@Autowired
 	UserRepo userRepo;
-	
+
 	@Autowired
 	UserFollowRepo userFollowRepo;
 	
-	public int changeProfile(InChangeProfile input) {
-		User user = userRepo.findByUsername(input.getUsername());
-		UserFollow userFollow = userFollowRepo.findByUsername(input.getUsername());
-		
-		if ( (input.getEmail() != null) && (input.getEmail() != "") ) {
-			if (userRepo.findByEmail(input.getEmail()) == null) {
-				user.setEmail(input.getEmail());
-			} else {
-				return 1;
+	public boolean changeProfile(InChangeProfile input) {
+		Optional<User> userOptional = userRepo.findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(input.getUsername());
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();
+			if (input.getPassword() != null && !input.getPassword().equals("")) {
+				user.setPassword(this.hash(input.getPassword()));
 			}
-		}
-		
-		if ( (input.getPhoneNumber() != null) && (input.getPhoneNumber() != "") ) {
-			if (userRepo.findByPhoneNumber(input.getPhoneNumber()) == null) {
-				user.setPhoneNumber(input.getPhoneNumber());
-			} else {
-				return 1;
+			if (input.getName() != null && !input.getName().equals("")) {
+				user.setName(input.getName());
 			}
-		}
-		
-		if ( (input.getDateOfBirth() != null) ) {
-			user.setDateOfBirth(input.getDateOfBirth());
-		}
-		
-		if ((input.getName() != null) && (input.getName() != "")) {
-			user.setName(input.getName());
-		}
-		
-		if ((input.getPassword() != null) && (input.getPassword() != "")) {
-			user.setPassword(input.getPassword());
-		}
-		
-		if ((input.getPurpose() != null) && (input.getPurpose() != "")) {
-			user.setPurpose(input.getPurpose());
-		}
-		
-		if (input.isOa() == true) {
-			user.setOa(true);
+			if (input.getDateOfBirth() != null && !input.getDateOfBirth().equals("")) {
+				user.setDateOfBirth(input.getDateOfBirth());
+			}
+			if (input.getCityOfBirth() != null && !input.getCityOfBirth().equals("")) {
+				user.setCityOfBirth(input.getCityOfBirth());
+			}
+			if (input.getPurpose() != null && !input.getPurpose().equals("")) {
+				user.setPurpose(input.getPurpose());
+			}
+			userRepo.save(user);
+
+			return true;
 		} else {
-			user.setOa(false);
+			return false;
 		}
-		
-		if ((input.getStatus() != null) && (input.getStatus() != "")) {
-			userFollow.setStatus(input.getStatus());
-		}
-		
-		return 0;
 	}
 	
 	public OutGetProfile getProfile(String username) {
-		UserFollow userFollow = userFollowRepo.findByUsername(username);
-		OutGetProfile output = new OutGetProfile();
-		
-		if ( userFollow != null ) {
-			output.setFollowers(userFollow.getFollowers());
-			output.setFollowing(userFollow.getFollowing());
-			output.setName(userFollow.getName());
-			output.setStatus(userFollow.getStatus());
-			output.setUsername(userFollow.getUsername());
-			
-			return output;
-		} 
-		
-		return null;
+		Optional<User> userOptional = userRepo.findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(username);
+		if (userOptional.isPresent()) {
+			OutGetProfile outGetProfile = new OutGetProfile().init(userOptional.get());
+			FollowObject followObject = userFollowRepo.findByUsername(username);
+			outGetProfile.setFollower(followObject.getFollower());
+			outGetProfile.setFollowing(followObject.getFollowing());
+			return outGetProfile;
+		} else {
+			return null;
+		}
     }
 }

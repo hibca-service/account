@@ -1,16 +1,16 @@
 package bit5.team2.account.service.impl;
 
-import bit5.team2.account.lib.BaseService;
-import bit5.team2.account.model.entity.Admin;
-import bit5.team2.account.model.entity.User;
-import bit5.team2.account.model.entity.UserFollow;
+import bit5.team2.account.model.RegisterValidator;
 import bit5.team2.account.model.input.InRegister;
-import bit5.team2.account.repo.AdminRepo;
-import bit5.team2.account.repo.UserFollowRepo;
-import bit5.team2.account.repo.UserRepo;
+import bit5.team2.account.repo.*;
 import bit5.team2.account.service.RegisterService;
+import bit5.team2.library.base.BaseService;
+import bit5.team2.library.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RegisterServiceImpl extends BaseService implements RegisterService {
@@ -22,178 +22,73 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 	
 	@Autowired
 	UserFollowRepo userFollowRepo;
-	
-	/*
-	 * List output if else case :
-	 * return 0 = success;
-	 * return 1 = failed hashed password;
-	 * return 2 = email, phone number, username already taken;
-	 * return 3 = email, phone number already taken;
-	 * return 4 = email, username already taken;
-	 * return 5 = phone number, username already taken;
-	 * return 6 = email already taken; 
-	 * return 7 = phone number already taken;
-	 * return 8 = username already taken;
-	 * */
-	 
-	public int register (InRegister input) {
+
+	private boolean _isOaValid(InRegister inRegister) {
+		return inRegister.getPurpose() != null;
+	}
+
+	private boolean _isUserValid(InRegister inRegister) {
+		return true;
+	}
+
+	private User _createOa(InRegister inRegister) {
 		User user = new User();
-		User registeredUser = new User();
-		int flag = 0;
-		User checkEmail = userRepo.findByEmail(input.getEmail());
-		User checkPhoneNumber = userRepo.findByPhoneNumber(input.getPhoneNumber());
-		User checkUsername = userRepo.findByUsername(input.getUsername());
-		Admin checkAdminUsername = adminRepo.findByUsername(input.getUsername());
-		String hashedPassword = this.hash(input.getPassword());
-		
-		if (hashedPassword == null) {
-			return 1;
-		} 
-		
-		if ( (checkEmail != null) && (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
-			return 2;
-		} 
-		
-		if ( (checkEmail != null) && (checkPhoneNumber != null) ) {
-			
-			if ( (checkEmail.isEmailVerified() == true) && (checkPhoneNumber.isPhoneVerified() == true) ) {
-				return 3; // email & PN registered and validated
+		user.setOa("1");
+		user.setUsername(inRegister.getUsername());
+		user.setPassword(this.hash(inRegister.getPassword()));
+		user.setPhoneNumber(inRegister.getPhoneNumber());
+		user.setPurpose(inRegister.getPurpose());
+		return user;
+	}
+
+	private User _createUser(InRegister inRegister) {
+		User user = new User();
+		user.setOa("0");
+		user.setUsername(inRegister.getUsername());
+		user.setName(inRegister.getUsername());
+		user.setPassword(this.hash(inRegister.getPassword()));
+		user.setPhoneNumber(inRegister.getPhoneNumber());
+		return user;
+	}
+
+	public RegisterValidator register(InRegister input) {
+		RegisterValidator registerValidator = new RegisterValidator();
+
+		ArrayList<String> invalid = new ArrayList<>();
+
+		List<User> userList = userRepo.findUserByUsernameOrPhoneNumber(input.getUsername(),input.getPhoneNumber());
+
+		if (userList != null) {
+			for (User user : userList) {
+				if (user.getFirebaseToken() != null) {
+					if (user.getUsername().equals(input.getUsername())) {
+						invalid.add("username");
+					}
+					else if (user.getPhoneNumber().equals(input.getPhoneNumber())) {
+						invalid.add("phone number");
+					}
+				}
 			}
-			flag = 1;
-			registeredUser = checkEmail;
-		} 
-		
-		if ( (checkEmail != null) && (checkUsername != null && checkAdminUsername != null) ) {
-			return 4;
-		} 
-
-		if ( (checkPhoneNumber != null) && (checkUsername != null && checkAdminUsername != null) ) {
-			return 5;
-		} 
-
-		if ( (checkEmail != null) ) {
-			if (checkEmail.isEmailVerified() == true) {
-				return 6; // email registered and validated
+		}
+		if (invalid.isEmpty()) {
+			switch (input.getOa()) {
+				case "1":
+					if (_isOaValid(input)) {
+						User user = this._createOa(input);
+						this.userRepo.save(user);
+						registerValidator.setUserId(user.getUserId());
+					}
+					break;
+				case "0":
+					if (_isUserValid(input)) {
+						User user = this._createUser(input);
+						this.userRepo.save(user);
+						registerValidator.setUserId(user.getUserId());
+					}
+					break;
 			}
-			flag = 1;
-			registeredUser = checkEmail;
-		} 
-
-		if ( (checkPhoneNumber != null) ) {
-			if (checkPhoneNumber.isPhoneVerified() == true) {
-				return 7; // PN registered and validated
-			}
-			flag = 1;
-			registeredUser = checkPhoneNumber;
 		}
-
-		if ( (checkUsername != null && checkAdminUsername != null) ) {
-			return 8;
-		}
-		
-		if (flag == 0) {
-			user.setId(String.valueOf(userRepo.nextId()));
-			user.setEmail(input.getEmail());
-			user.setPhoneNumber(input.getPhoneNumber());
-			user.setOa(input.isOa());
-			user.setUsername(input.getUsername());
-			user.setEmailVerified(false);
-			user.setPhoneVerified(false);
-			user.setPassword(hashedPassword);
-	        
-	        UserFollow userFollow = new UserFollow();
-	        userFollow.setFollowers(0);
-	        userFollow.setFollowing(0);
-	        userFollow.setId(String.valueOf(userRepo.nextId()));
-	        userFollow.setName(null);
-	        userFollow.setStatus("...");
-	        userFollow.setUsername(input.getUsername());
-			
-	        userFollowRepo.save(userFollow);
-			userRepo.save(user);
-		} else {
-			registeredUser.setEmail(input.getEmail());
-			registeredUser.setPhoneNumber(input.getPhoneNumber());
-			registeredUser.setOa(input.isOa());
-			registeredUser.setUsername(input.getUsername());
-			registeredUser.setPassword(hashedPassword);
-			
-			UserFollow userFollow = userFollowRepo.findByUsername(input.getUsername());
-			userFollow.setFollowers(0);
-	        userFollow.setFollowing(0);
-	        userFollow.setStatus("...");
-	        userFollow.setName(null);
-	        
-	        userFollowRepo.save(userFollow);
-	        userRepo.save(registeredUser);
-		}
-        
-		return 0;
+		registerValidator.setInvalid(invalid);
+		return registerValidator;
 	}
 }
-//public String registerStep1(InRegister1 input) {
-//User user = new User();
-//User checkEmail = userRepo.findByEmail(input.getEmail());
-//User checkPhoneNumber = userRepo.findByPhoneNumber(input.getPhoneNumber());
-//
-////check email and phone number data
-//if ( checkEmail == null ) {
-//	if ( checkPhoneNumber == null ) {
-//		//put data into db
-//		user.setId(String.valueOf(userRepo.nextId()));
-//		user.setEmail(input.getEmail());
-//		user.setPhoneNumber(input.getPhoneNumber());
-//		user.setOa(input.isOa());
-//		
-//		userRepo.save(user);
-//		
-//		return user.getId();
-//	}
-//} else {
-//	if (!(checkEmail.isFinished())) {
-//		return user.getId();
-//	}
-//}
-//return null;
-//}
-//
-//public String registerStep2(InRegister2 input) {
-//User user = userRepo.findById(input.getId());
-//User checkUsername = userRepo.findByUsername(input.getUsername());
-//
-////check username
-//if ( checkUsername == null ) {
-//	//put data into db
-//	String hashedPassword = this.hash(input.getPassword());
-//	if (hashedPassword == null) {
-//		return null;
-//	}
-//	
-//    user.setUsername(input.getUsername());
-//    user.setPassword(hashedPassword);
-//	userRepo.save(user);
-//	return user.getId();
-//} else {
-//	if ( !(user.isFinished())) {
-//		return user.getId();
-//	}
-//}
-//return null;
-//}
-//
-//public void registerStep3(InRegister3 input) {
-//User user = userRepo.findById(input.getId());
-//
-////put data into db
-//user.setName(input.getName());
-//user.setDateOfBirth(input.getDateOfBirth());
-//user.setPurpose(input.getPurpose());
-//
-//userRepo.save(user);
-//}
-
-//User checkPhoneNumberIfEmailValid = userRepo.findByPhoneNumber(input.getPhoneNumber());
-//if (checkPhoneNumberIfEmailValid != null) {
-//	return 12; // if email valid and phone number is taken.
-//}
-

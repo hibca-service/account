@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OutLogin {
+public class OutLoginWeb {
     private String accessToken;
     private String refreshToken;
     private boolean superAdmin;

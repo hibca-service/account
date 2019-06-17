@@ -14,13 +14,23 @@ import lombok.Setter;
 public class InChangeProfile {
 	@NotEmpty
 	private String username; //buat cari data user yang mau diganti dari database
+
+	private String pathProfilePicture;
+
 	private String password;
+
 	private String name;
-	private String email;
-	private String phoneNumber;
+
+//	private String phoneNumber;
+
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date dateOfBirth;
+	private String dateOfBirth;
+
+	private String cityOfBirth;
+
 	private String purpose;
-	private boolean oa;
-	private String status;
+
+//	private boolean oa;
+
+//	private String status;
 }

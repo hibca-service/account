@@ -1,6 +1,8 @@
 package bit5.team2.account.service;
 
+import bit5.team2.account.model.input.InVerificationPhone;
+
 public interface VerificationService {
-	public int viaEmail(String id);
-	public int viaPhone(String id);
+//	int viaEmail(String id);
+	boolean viaPhone(InVerificationPhone id);
 }
