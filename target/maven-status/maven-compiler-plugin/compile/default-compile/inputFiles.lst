@@ -2,7 +2,6 @@ D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\AccountApplicatio
 D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\controller\VerificationController.java
 D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\service\VerificationService.java
 D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\controller\RegisterController.java
-D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\model\input\InGetUserMini.java
 D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\repo\UserFollowRepo.java
 D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\service\impl\UserService.java
 D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\controller\LoginController.java
@@ -10,7 +9,6 @@ D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\service\RegisterS
 D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\model\FollowObject.java
 D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\repo\UserRepo.java
 D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\controller\UserController.java
-D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\model\output\OutGetUserMini.java
 D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\service\impl\ProfileServiceImpl.java
 D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\controller\ProfileController.java
 D:\Spring\Collabs\API\account\src\main\java\bit5\team2\account\service\impl\RegisterServiceImpl.java
