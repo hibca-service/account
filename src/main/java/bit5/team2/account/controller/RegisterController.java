@@ -1,9 +1,9 @@
 package bit5.team2.account.controller;
 
 import bit5.team2.account.model.RegisterValidator;
-import bit5.team2.account.model.input.InRegister;
 import bit5.team2.account.service.RegisterService;
 import bit5.team2.library.base.BaseController;
+import bit5.team2.library.input.account.InRegister;
 import bit5.team2.library.output.ResultEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
