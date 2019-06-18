@@ -1,94 +1,96 @@
 package bit5.team2.account.service.impl;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
+import bit5.team2.account.model.RegisterValidator;
+import bit5.team2.account.repo.AdminRepo;
+import bit5.team2.account.repo.UserFollowRepo;
+import bit5.team2.account.repo.UserRepo;
+import bit5.team2.account.service.RegisterService;
+import bit5.team2.library.base.BaseService;
+import bit5.team2.library.entity.User;
+import bit5.team2.library.input.account.InRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import bit5.team2.account.model.input.Register1;
-import bit5.team2.account.model.input.Register2;
-import bit5.team2.account.model.input.Register3;
-import bit5.team2.account.model.entity.User;
-import bit5.team2.account.repo.UserRepo;
-import bit5.team2.account.service.RegisterService;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
-public class RegisterServiceImpl implements RegisterService {
+public class RegisterServiceImpl extends BaseService implements RegisterService {
 	@Autowired
 	UserRepo userRepo;
 	
-	public String registerStep1(Register1 input) {
-		User user = new User();
-		User checkEmail = userRepo.findByEmail(input.getEmail());
-		
-		//check email and phone number data
-		if ( checkEmail == null ) {
-			//put data into db
-			user.setId(String.valueOf(userRepo.nextId()));
-			user.setEmail(input.getEmail());
-			user.setPhoneNumber(input.getPhoneNumber());
-			user.setOa(input.isOa());
-			
-			userRepo.save(user);
-			
-			return user.getId();
-		} else {
-			if (!(checkEmail.isFinished() == true)) {
-				return user.getId();
-			}
-		}
-		return null;
-    }
+	@Autowired
+	AdminRepo adminRepo;
 	
-	public String registerStep2(Register2 input) {
-		String convertedPassword = new String();
-		User user = userRepo.findById(input.getId());
-		User checkUsername = userRepo.findByUsername(input.getUsername());
-		
-		//check username
-		if ( checkUsername == null ) {
-			//put data into db
-			try {
-	        	MessageDigest digest = MessageDigest.getInstance("SHA-256");
-	        	byte[] encodedhash = digest.digest(input.getPassword().getBytes(StandardCharsets.UTF_8));
-	        	convertedPassword = bytesToHex(encodedhash);
-			} catch (NoSuchAlgorithmException e) {
-				
-				e.printStackTrace();
-			}
-			
-	        user.setUsername(input.getUsername());
-	        user.setPassword(convertedPassword);
-			userRepo.save(user);
-			return user.getId();
-		} else {
-			if ( !(user.isFinished() == true)) {
-				return user.getId();
-			}
-		}
-		return null;
-    }
-	
-	public void registerStep3(Register3 input) {
-		User user = userRepo.findById(input.getId());
-		
-		//put data into db
-        user.setName(input.getName());
-        user.setDateOfBirth(input.getDateOfBirth());
-        user.setPurpose(input.getPurpose());
-		
-		userRepo.save(user);
+	@Autowired
+	UserFollowRepo userFollowRepo;
+
+	private boolean _isOaValid(InRegister inRegister) {
+		return inRegister.getPurpose() != null;
 	}
-	
-	private static String bytesToHex(byte[] hash) {
-	    StringBuffer hexString = new StringBuffer();
-	    for (int i = 0; i < hash.length; i++) {
-	    String hex = Integer.toHexString(0xff & hash[i]);
-	    if(hex.length() == 1) hexString.append('0');
-	        hexString.append(hex);
-	    }
-	    return hexString.toString();
+
+	private boolean _isUserValid(InRegister inRegister) {
+		return true;
+	}
+
+	private User _createOa(InRegister inRegister) {
+		User user = new User();
+		user.setOa("1");
+		user.setUsername(inRegister.getUsername());
+		user.setPassword(this.hash(inRegister.getPassword()));
+		user.setPhoneNumber(inRegister.getPhoneNumber());
+		user.setPurpose(inRegister.getPurpose());
+		return user;
+	}
+
+	private User _createUser(InRegister inRegister) {
+		User user = new User();
+		user.setOa("0");
+		user.setUsername(inRegister.getUsername());
+		user.setName(inRegister.getUsername());
+		user.setPassword(this.hash(inRegister.getPassword()));
+		user.setPhoneNumber(inRegister.getPhoneNumber());
+		return user;
+	}
+
+	public RegisterValidator register(InRegister input) {
+		RegisterValidator registerValidator = new RegisterValidator();
+
+		ArrayList<String> invalid = new ArrayList<>();
+
+		List<User> userList = userRepo.findUserByUsernameOrPhoneNumber(input.getUsername(),input.getPhoneNumber());
+
+		if (userList != null) {
+			for (User user : userList) {
+				if (user.getFirebaseToken() != null) {
+					if (user.getUsername().equals(input.getUsername())) {
+						invalid.add("username");
+					}
+					else if (user.getPhoneNumber().equals(input.getPhoneNumber())) {
+						invalid.add("phone number");
+					}
+				}
+			}
+		}
+		if (invalid.isEmpty()) {
+			switch (input.getOa()) {
+				case "1":
+					if (_isOaValid(input)) {
+						User user = this._createOa(input);
+						this.userRepo.save(user);
+						registerValidator.setUserId(user.getUserId());
+					}
+					break;
+				case "0":
+					if (_isUserValid(input)) {
+						User user = this._createUser(input);
+						this.userRepo.save(user);
+						registerValidator.setUserId(user.getUserId());
+					}
+					break;
+			}
+		}
+		registerValidator.setInvalid(invalid);
+		return registerValidator;
 	}
 }

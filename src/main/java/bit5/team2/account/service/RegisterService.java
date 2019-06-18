@@ -1,11 +1,8 @@
 package bit5.team2.account.service;
 
-import bit5.team2.account.model.input.Register1;
-import bit5.team2.account.model.input.Register2;
-import bit5.team2.account.model.input.Register3;
+import bit5.team2.account.model.RegisterValidator;
+import bit5.team2.library.input.account.InRegister;
 
 public interface RegisterService {
-	public String registerStep1(Register1 input);
-	public String registerStep2(Register2 input);
-	public void registerStep3(Register3 input);
+	RegisterValidator register(InRegister input);
 }

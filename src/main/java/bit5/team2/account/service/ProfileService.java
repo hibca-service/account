@@ -1,7 +1,9 @@
 package bit5.team2.account.service;
 
-import bit5.team2.account.model.input.ChangeProfileInput;
+import bit5.team2.library.input.account.InChangeProfile;
+import bit5.team2.library.output.account.OutGetProfile;
 
 public interface ProfileService {
-	public int changeProfile(ChangeProfileInput input);
+	boolean changeProfile(InChangeProfile input);
+	OutGetProfile getProfile(String username);
 }

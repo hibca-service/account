@@ -1,60 +1,63 @@
 package bit5.team2.account.service.impl;
 
+import bit5.team2.account.model.FollowObject;
+import bit5.team2.account.repo.UserFollowRepo;
+import bit5.team2.account.repo.UserRepo;
+import bit5.team2.account.service.ProfileService;
+import bit5.team2.library.base.BaseService;
+import bit5.team2.library.entity.User;
+import bit5.team2.library.input.account.InChangeProfile;
+import bit5.team2.library.output.account.OutGetProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import bit5.team2.account.model.entity.User;
-import bit5.team2.account.model.input.ChangeProfileInput;
-import bit5.team2.account.repo.UserRepo;
-import bit5.team2.account.service.ProfileService;
+import java.util.Optional;
 
 @Service
-public class ProfileServiceImpl implements ProfileService {
+public class ProfileServiceImpl extends BaseService implements ProfileService {
 	@Autowired
 	UserRepo userRepo;
+
+	@Autowired
+	UserFollowRepo userFollowRepo;
 	
-	public int changeProfile(ChangeProfileInput input) {
-		User user = userRepo.findByUsername(input.getUsername());
-		
-		if (!(input.getEmail().equals(null))) {
-			if (userRepo.findByEmail(input.getEmail()) == null) {
-				user.setEmail(input.getEmail());
+	public boolean changeProfile(InChangeProfile input) {
+		Optional<User> userOptional = userRepo.findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(input.getUsername());
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();
+			if (input.getPassword() != null && !input.getPassword().equals("")) {
+				user.setPassword(this.hash(input.getPassword()));
 			}
-			else {
-				return 1;
+			if (input.getName() != null && !input.getName().equals("")) {
+				user.setName(input.getName());
 			}
-		}
-		
-		if (!(input.getPhoneNumber().equals(null))) {
-			if (userRepo.findByPhoneNumber(input.getPhoneNumber()) == null) {
-				user.setPhoneNumber(input.getPhoneNumber());
-			} 
-			else {
-				return 1;
+			if (input.getDateOfBirth() != null && !input.getDateOfBirth().equals("")) {
+				user.setDateOfBirth(input.getDateOfBirth());
 			}
-		}
-		
-		if (!(input.getDateOfBirth().equals(null))) {
-			user.setDateOfBirth(input.getDateOfBirth());
-		}
-		
-		if (!(input.getName().equals(null))) {
-			user.setName(input.getName());
-		}
-		
-		if (!(input.getPassword().equals(null))) {
-			user.setPassword(input.getPassword());
-		}
-		
-		if (!(input.getPurpose().equals(null))) {
-			user.setPurpose(input.getPurpose());
-		}
-		
-		if (input.isOa() == true) {
-			user.setOa(true);
+			if (input.getCityOfBirth() != null && !input.getCityOfBirth().equals("")) {
+				user.setCityOfBirth(input.getCityOfBirth());
+			}
+			if (input.getPurpose() != null && !input.getPurpose().equals("")) {
+				user.setPurpose(input.getPurpose());
+			}
+			userRepo.save(user);
+
+			return true;
 		} else {
-			user.setOa(false);
+			return false;
 		}
-		return 0;
 	}
+	
+	public OutGetProfile getProfile(String username) {
+		Optional<User> userOptional = userRepo.findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(username);
+		if (userOptional.isPresent()) {
+			OutGetProfile outGetProfile = new OutGetProfile().init(userOptional.get());
+			FollowObject followObject = userFollowRepo.findByUsername(username);
+			outGetProfile.setFollower(followObject.getFollower());
+			outGetProfile.setFollowing(followObject.getFollowing());
+			return outGetProfile;
+		} else {
+			return null;
+		}
+    }
 }

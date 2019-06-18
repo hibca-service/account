@@ -1,101 +1,86 @@
 package bit5.team2.account.service.impl;
 
-import bit5.team2.account.lib.JWT;
-import bit5.team2.account.model.entity.User;
-import bit5.team2.account.model.output.Token;
+import bit5.team2.account.repo.AdminRepo;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.LoginService;
+import bit5.team2.library.base.BaseService;
+import bit5.team2.library.entity.Admin;
+import bit5.team2.library.entity.User;
+import bit5.team2.library.output.account.OutLoginMobile;
+import bit5.team2.library.output.account.OutLoginWeb;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.Optional;
 
 @Service
-public class LoginServiceImpl implements LoginService {
+public class LoginServiceImpl extends BaseService implements LoginService {
     @Autowired
     UserRepo userRepo;
 
-    @Value("${refresh_token_duration}")
-    private int refreshTokenDuration;
-
-    @Value("${access_token_duration}")
-    private int accessTokenDuration;
+    @Autowired
+    AdminRepo adminRepo;
 
     @Override
-    public Token login(String username, String password) {
-        String hashedPassword = this._hash(password);
+    public Object login(String username, String password) {
+        String hashedPassword = this.hash(password);
         if (hashedPassword == null) {
             return null;
         }
 
-        Token output = this._loginMobile(username,hashedPassword);
-        if (output == null) {
-            return this._loginWeb(username,hashedPassword);
+        //check is the user admin first then check regular user
+        OutLoginWeb web = this._loginWeb(username, hashedPassword);
+        if (web != null) {
+            return web;
+        } else {
+            return this._loginMobile(username, hashedPassword);
         }
-        else {
-            return output;
-        }
+
     }
 
-    @Override
-    public void set() {
-        User user = new User();
-        user.setUsername("dharmawan");
-        user.setPassword(this._hash("123"));
-        userRepo.save(user);
-    }
-
-    private String _bytesToHex(byte[] hash) {
-        StringBuilder hexString = new StringBuilder();
-        for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(0xff & hash[i]);
-            if(hex.length() == 1) hexString.append('0');
-            hexString.append(hex);
-        }
-        return hexString.toString();
-    }
-
-    private String _hash(String password) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedhash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-            return _bytesToHex(encodedhash);
-        } catch (NoSuchAlgorithmException e) {
-            return null;
-        }
-    }
-
-    private Token _loginMobile(String username, String password) {
-        User user = userRepo.findByUsernameAndPassword(username,password);
-        if (user == null) {
-            return null;
-        }
-        else {
-            JWT jwt = new JWT();
+    private OutLoginMobile _loginMobile(String username, String password) {
+        Optional<User> userOptional = userRepo.findUserByUsernameAndPasswordAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(username, password);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
             HashMap<String, Object> map = new HashMap<>();
-            map.put("userId",user.getId());
-            map.put("username",username);
-            String refresh = jwt.generateToken(map,false,this.refreshTokenDuration);
-            map.put("name",user.getName());
-            map.put("dateOfBirth",user.getDateOfBirth());
-            map.put("purpose",user.getPurpose());
-            map.put("oa",user.isOa());
-            map.put("finished",user.isFinished());
-            String access = jwt.generateToken(map,false,this.accessTokenDuration);
+            map.put("userId", user.getUserId());
+            map.put("username", username);
+            String refresh = this.createRefreshToken(map, false);
+            map.put("name", user.getName());
+            map.put("dateOfBirth", user.getDateOfBirth());
+            map.put("purpose", user.getPurpose());
+            map.put("oa", user.getOa());
+            String access = this.createRefreshToken(map, false);
 
-            Token token = new Token();
+            OutLoginMobile token = new OutLoginMobile();
             token.setAccessToken(access);
             token.setRefreshToken(refresh);
 
             return token;
+        } else {
+            return null;
         }
     }
 
-    private Token _loginWeb(String username, String password) {
-        return null;
+    private OutLoginWeb _loginWeb(String username, String password) {
+        Admin admin = adminRepo.findAdminByAdminUsernameAndAdminPassword(username, password);
+        if (admin == null) {
+            return null;
+        } else {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("userId", admin.getAdminId());
+            map.put("username", username);
+            String refresh = this.createRefreshToken(map, true);
+            map.put("superAdmin", admin.getAdminCode());
+            String access = this.createAccessToken(map, true);
+
+            OutLoginWeb token = new OutLoginWeb();
+            token.setAccessToken(access);
+            token.setRefreshToken(refresh);
+            token.setSuperAdmin(admin.getAdminCode() == 1);
+
+            return token;
+        }
     }
 }
