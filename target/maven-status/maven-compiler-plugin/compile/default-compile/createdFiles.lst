@@ -1,13 +1,14 @@
 bit5\team2\account\controller\UserController.class
 bit5\team2\account\controller\ProfileController.class
+bit5\team2\account\service\impl\UserServiceImpl.class
 bit5\team2\account\repo\UserRepo.class
+bit5\team2\account\service\UserService.class
 bit5\team2\account\repo\UserFollowRepo.class
 bit5\team2\account\service\impl\VerificationServiceImpl.class
 bit5\team2\account\controller\VerificationController.class
 bit5\team2\account\service\LoginService.class
 bit5\team2\account\controller\RegisterController.class
 bit5\team2\account\model\FollowObject.class
-bit5\team2\account\service\impl\UserService.class
 bit5\team2\account\service\VerificationService.class
 bit5\team2\account\AccountApplication.class
 bit5\team2\account\service\RegisterService.class

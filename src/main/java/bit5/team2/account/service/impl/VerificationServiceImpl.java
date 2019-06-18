@@ -14,6 +14,7 @@ public class VerificationServiceImpl implements VerificationService {
 	@Autowired
 	UserRepo userRepo;
 
+	@Override
 	public boolean viaPhone(InVerificationPhone input) {
 		Optional<User> userOptional = userRepo.findUserByUserIdAndFirebaseTokenIsNullAndFirebaseUUIDIsNull(input.getUserId());
 		if (userOptional.isPresent()) {

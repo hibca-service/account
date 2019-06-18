@@ -1,6 +1,6 @@
 package bit5.team2.account.controller;
 
-import bit5.team2.account.service.impl.UserService;
+import bit5.team2.account.service.impl.UserServiceImpl;
 import bit5.team2.library.base.BaseController;
 import bit5.team2.library.base.PagingProperties;
 import bit5.team2.library.entity.User;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/account")
 public class UserController extends BaseController {
     @Autowired
-    UserService userService;
+    UserServiceImpl userService;
 
     @GetMapping("/get-user")
     public ResultEntity<Object> getUser(HttpServletRequest request,

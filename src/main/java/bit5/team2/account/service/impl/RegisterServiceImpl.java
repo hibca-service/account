@@ -53,6 +53,7 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 		return user;
 	}
 
+	@Override
 	public RegisterValidator register(InRegister input) {
 		RegisterValidator registerValidator = new RegisterValidator();
 

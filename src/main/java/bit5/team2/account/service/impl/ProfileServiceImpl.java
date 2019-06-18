@@ -20,7 +20,8 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 
 	@Autowired
 	UserFollowRepo userFollowRepo;
-	
+
+	@Override
 	public boolean changeProfile(InChangeProfile input) {
 		Optional<User> userOptional = userRepo.findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(input.getUsername());
 		if (userOptional.isPresent()) {
@@ -47,7 +48,8 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 			return false;
 		}
 	}
-	
+
+	@Override
 	public OutGetProfile getProfile(String username) {
 		Optional<User> userOptional = userRepo.findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(username);
 		if (userOptional.isPresent()) {
