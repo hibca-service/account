@@ -22,8 +22,8 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 	UserFollowRepo userFollowRepo;
 
 	@Override
-	public boolean changeProfile(InChangeProfile input) {
-		Optional<User> userOptional = userRepo.findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(input.getUsername());
+	public boolean changeProfile(String username, InChangeProfile input) {
+		Optional<User> userOptional = userRepo.findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(username);
 		if (userOptional.isPresent()) {
 			User user = userOptional.get();
 			if (input.getPassword() != null && !input.getPassword().equals("")) {

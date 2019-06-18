@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/account")
@@ -21,13 +22,13 @@ public class ProfileController extends BaseController {
     @GetMapping(value = "/get-profile")
     public @ResponseBody
     ResultEntity<Object> getProfile(HttpServletRequest request,
-                                       @RequestParam String username) {
+                                    @RequestParam Optional<String> username) {
         ResultEntity<Object> err = this.unauthorizedUser(request);
         if (err != null) {
             return err;
         }
 
-        OutGetProfile output = profileService.getProfile(username);
+        OutGetProfile output = profileService.getProfile(username.orElse((String) this.data.get("username")));
 
         if (output == null) {
             return this.failed();
@@ -48,7 +49,7 @@ public class ProfileController extends BaseController {
 
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
-            if (profileService.changeProfile(input)) {
+            if (profileService.changeProfile((String) this.data.get("username"),input)) {
                 return this.success(null);
             } else {
                 return this.failed();
