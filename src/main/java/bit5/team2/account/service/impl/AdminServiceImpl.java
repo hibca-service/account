@@ -1,6 +1,8 @@
 package bit5.team2.account.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import bit5.team2.account.model.input.InCreateCoAdmin;
+import bit5.team2.account.model.input.InUpdateCoAdmin;
 import bit5.team2.account.model.output.OutReadCoAdmin;
 import bit5.team2.account.repo.AdminRepo;
 import bit5.team2.account.service.AdminService;
@@ -71,5 +74,35 @@ public class AdminServiceImpl extends BaseService implements AdminService {
 		}
 		
 		return output;
+	}
+	
+	public boolean updateCoAdmin(InUpdateCoAdmin input, String adminId) {
+		Admin admin = adminRepo.findAdminByAdminId(adminId);
+		
+		if (admin != null) {
+			int flag = 0;
+//			if (input.getAdminName() != null && input.getAdminName() != "") {
+//				admin.setAdminName(input.getAdminName());
+//				flag = 1;
+//			}
+			
+			if (input.getAdminPassword() != null && input.getAdminPassword() != "" ) {
+				admin.setAdminPassword(this.hash(input.getAdminPassword()));
+				flag = 1;
+			}
+			
+			//if lastUpdateDate is implemented in admin entity
+//			if (flag == 1) {
+//				Date date= new Date();
+//				Timestamp ts = new Timestamp(date.getTime());
+//				admin.setLastUpdateDate(ts);
+//			}
+			
+			adminRepo.save(admin);
+			
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import bit5.team2.account.model.input.InCreateCoAdmin;
+import bit5.team2.account.model.input.InUpdateCoAdmin;
 import bit5.team2.account.model.output.OutReadCoAdmin;
 import bit5.team2.account.service.AdminService;
 import bit5.team2.library.base.BaseController;
@@ -29,6 +30,7 @@ public class AdminController extends BaseController {
 	@Autowired
 	AdminService adminService;
 	
+	//create co admin without authorization
 	@PostMapping(value = "/create-co-admin", consumes = "application/json")
     public @ResponseBody
 	ResultEntity<Object> createCoAdmin(@RequestBody @Valid InCreateCoAdmin input,
@@ -48,6 +50,36 @@ public class AdminController extends BaseController {
         }
     }
 	
+	@GetMapping("/get-co-admin")
+    public ResultEntity<Object> getCoAdmin() {
+        if (adminService.readCoAdmin()==null) {
+        	return this.empty();
+        } else {
+        	return this.success(adminService.readCoAdmin());
+        }
+    }
+	
+	//update co admin without authorization
+	@PostMapping(value = "/update-co-admin", consumes = "application/json")
+    public @ResponseBody
+	ResultEntity<Object> createCoAdmin(@RequestBody @Valid InUpdateCoAdmin input,
+                                  BindingResult bindingResult) {
+        ResultEntity<Object> errorInput = this.validateInput(bindingResult);
+        String adminId = "61aa2ec5-87cf-4032-a06d-e378649e5864";
+        if (errorInput == null) {
+        	boolean output = adminService.updateCoAdmin(input,adminId);
+        	if (output == false) {
+        		return this.failed();
+			} else {
+        		return this.success(null);
+			}
+        }
+        else {
+            return errorInput;
+        }
+    }
+	
+	//get co admin with authorization
 //	@GetMapping("/get-co-admin")
 //    public ResultEntity<Object> getCoAdmin(HttpServletRequest request) {
 //        ResultEntity<Object> err = this.unauthorizedUser(request);
@@ -61,13 +93,29 @@ public class AdminController extends BaseController {
 //			return this.success(adminService.readCoAdmin());
 //		}
 //    }
-	
-	@GetMapping("/get-co-admin")
-    public ResultEntity<Object> getCoAdmin() {
-        if (adminService.readCoAdmin()==null) {
-        	return this.empty();
-        } else {
-        	return this.success(adminService.readCoAdmin());
-        }
-    }
+		
+		//update co admin with authorization
+//		@PostMapping(value = "/update-co-admin", consumes = "application/json")
+//	    public @ResponseBody
+//		ResultEntity<Object> createCoAdmin(@RequestBody @Valid InUpdateCoAdmin input, HttpServletRequest request,
+//	                                  BindingResult bindingResult) {
+//			ResultEntity<Object> err = this.unauthorizedUser(request);
+//	        if (err != null) {
+//	            return err;
+//	        }
+//			
+//	        ResultEntity<Object> errorInput = this.validateInput(bindingResult);
+//	        String adminId = "61aa2ec5-87cf-4032-a06d-e378649e5864";
+//	        if (errorInput == null) {
+//	        	boolean output = adminService.updateCoAdmin(input,adminId);
+//	        	if (output == false) {
+//	        		return this.failed();
+//				} else {
+//	        		return this.success(null);
+//				}
+//	        }
+//	        else {
+//	            return errorInput;
+//	        }
+//	    }
 }
