@@ -99,6 +99,30 @@ public class AdminController extends BaseController {
         }
     }
 	
+	//suspend coadmin without authorization
+//	@PostMapping(value = "/suspend-co-admin", consumes = "application/json")
+//    public @ResponseBody
+//	ResultEntity<Object> deleteCoAdmin(@RequestBody @Valid InDeleteCoAdmin input, HttpServletRequest request,
+//                                  BindingResult bindingResult) {
+//		ResultEntity<Object> err = this.unauthorizedUser(request);
+//		if (err != null) {
+//		    return err;
+//		}
+//		
+//        ResultEntity<Object> errorInput = this.validateInput(bindingResult);
+//        if (errorInput == null) {
+//        	boolean output = adminService.suspendCoAdmin(input);
+//        	if (output == false) {
+//        		return this.failed();
+//			} else {
+//        		return this.success(null);
+//			}
+//        }
+//        else {
+//            return errorInput;
+//        }
+//    }
+	
 	//create co admin with authorization
 //	@PostMapping(value = "/create-co-admin", consumes = "application/json")
 //    public @ResponseBody
