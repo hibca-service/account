@@ -55,12 +55,19 @@ public class AdminController extends BaseController {
 //            return err;
 //        }
 //        
-//        return this.success(adminService.readCoAdmin());
+//        if (adminService.readCoAdmin()==null) {
+//			return this.empty();
+//		} else {
+//			return this.success(adminService.readCoAdmin());
+//		}
 //    }
 	
 	@GetMapping("/get-co-admin")
     public ResultEntity<Object> getCoAdmin() {
-        
-        return this.success(adminService.readCoAdmin());
+        if (adminService.readCoAdmin()==null) {
+        	return this.empty();
+        } else {
+        	return this.success(adminService.readCoAdmin());
+        }
     }
 }
