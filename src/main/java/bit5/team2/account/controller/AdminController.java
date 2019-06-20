@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import bit5.team2.account.model.input.InCreateCoAdmin;
+import bit5.team2.account.model.input.InDeleteCoAdmin;
 import bit5.team2.account.model.input.InUpdateCoAdmin;
 import bit5.team2.account.model.output.OutReadCoAdmin;
 import bit5.team2.account.service.AdminService;
@@ -62,12 +63,31 @@ public class AdminController extends BaseController {
 	//update co admin without authorization
 	@PostMapping(value = "/update-co-admin", consumes = "application/json")
     public @ResponseBody
-	ResultEntity<Object> createCoAdmin(@RequestBody @Valid InUpdateCoAdmin input,
+	ResultEntity<Object> updateCoAdmin(@RequestBody @Valid InUpdateCoAdmin input,
                                   BindingResult bindingResult) {
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         String adminId = "61aa2ec5-87cf-4032-a06d-e378649e5864";
         if (errorInput == null) {
         	boolean output = adminService.updateCoAdmin(input,adminId);
+        	if (output == false) {
+        		return this.failed();
+			} else {
+        		return this.success(null);
+			}
+        }
+        else {
+            return errorInput;
+        }
+    }
+	
+	//suspend coadmin without authorization
+	@PostMapping(value = "/suspend-co-admin", consumes = "application/json")
+    public @ResponseBody
+	ResultEntity<Object> deleteCoAdmin(@RequestBody @Valid InDeleteCoAdmin input,
+                                  BindingResult bindingResult) {
+        ResultEntity<Object> errorInput = this.validateInput(bindingResult);
+        if (errorInput == null) {
+        	boolean output = adminService.suspendCoAdmin(input);
         	if (output == false) {
         		return this.failed();
 			} else {
