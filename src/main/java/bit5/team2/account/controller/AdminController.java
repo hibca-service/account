@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import bit5.team2.account.model.input.InApproveOA;
 import bit5.team2.account.model.input.InCreateCoAdmin;
 import bit5.team2.account.model.input.InDeleteCoAdmin;
 import bit5.team2.account.model.input.InSuspendAccount;
@@ -118,6 +119,48 @@ public class AdminController extends BaseController {
             return errorInput;
         }
     }
+	
+	//approve OA without authorization
+	@PostMapping(value = "/approve-oa", consumes = "application/json")
+    public @ResponseBody
+	ResultEntity<Object> approveOA(@RequestBody @Valid InApproveOA input,
+                                  BindingResult bindingResult) {
+        ResultEntity<Object> errorInput = this.validateInput(bindingResult);
+        if (errorInput == null) {
+        	boolean output = adminService.approveOA(input);
+        	if (output == false) {
+        		return this.failed();
+			} else {
+        		return this.success(null);
+			}
+        }
+        else {
+            return errorInput;
+        }
+    }
+	
+	//approve OA with authorization
+//	@PostMapping(value = "/approve-oa", consumes = "application/json")
+//    public @ResponseBody
+//	ResultEntity<Object> approveOA(@RequestBody @Valid InApproveOA input,HttpServletRequest request,
+//                                  BindingResult bindingResult) {
+//		ResultEntity<Object> err = this.unauthorizedUser(request);
+//		if (err != null) {
+//		    return err;
+//		}	
+//        ResultEntity<Object> errorInput = this.validateInput(bindingResult);
+//        if (errorInput == null) {
+//        	boolean output = adminService.approveOA(input);
+//        	if (output == false) {
+//        		return this.failed();
+//			} else {
+//        		return this.success(null);
+//			}
+//        }
+//        else {
+//            return errorInput;
+//        }
+//    }
 	
 	//suspend account with authorization
 //	@PostMapping(value = "/suspend-account", consumes = "application/json")
