@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import bit5.team2.account.model.input.InCreateCoAdmin;
+import bit5.team2.account.model.input.InDeleteCoAdmin;
 import bit5.team2.account.model.input.InUpdateCoAdmin;
 import bit5.team2.account.model.output.OutReadCoAdmin;
 import bit5.team2.account.repo.AdminRepo;
@@ -100,6 +101,22 @@ public class AdminServiceImpl extends BaseService implements AdminService {
 			
 			adminRepo.save(admin);
 			
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean suspendCoAdmin(InDeleteCoAdmin input) {
+		Admin admin = adminRepo.findAdminByAdminUsername(input.getAdminUsername());
+		
+		if (admin != null) {
+			//if isactive parameter is available
+//			if (input.isActive() == true) {
+//				admin.setActive(true);
+//			} else {
+//				admin.setActive(false);
+//			}
 			return true;
 		} else {
 			return false;
