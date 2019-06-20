@@ -17,17 +17,23 @@ import org.springframework.stereotype.Service;
 
 import bit5.team2.account.model.input.InCreateCoAdmin;
 import bit5.team2.account.model.input.InDeleteCoAdmin;
+import bit5.team2.account.model.input.InSuspendAccount;
 import bit5.team2.account.model.input.InUpdateCoAdmin;
 import bit5.team2.account.model.output.OutReadCoAdmin;
 import bit5.team2.account.repo.AdminRepo;
+import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.AdminService;
 import bit5.team2.library.base.BaseService;
 import bit5.team2.library.entity.Admin;
+import bit5.team2.library.entity.User;
 
 @Service
 public class AdminServiceImpl extends BaseService implements AdminService {
 	@Autowired
 	AdminRepo adminRepo;
+	
+	@Autowired
+	UserRepo userRepo;
 	
 	@PersistenceContext
     EntityManager entityManager;
@@ -117,6 +123,23 @@ public class AdminServiceImpl extends BaseService implements AdminService {
 //			} else {
 //				admin.setActive(false);
 //			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean suspendAccount(InSuspendAccount input) {
+		User user = userRepo.findByUsername(input.getUsername());
+		
+		if (user != null) {
+			//if isSuspended is available
+//			if (input.isSuspended() == true) {
+//				user.setSuspended(true);
+//			} else {
+//				user.setSuspended(false);
+//			}
+			
 			return true;
 		} else {
 			return false;
