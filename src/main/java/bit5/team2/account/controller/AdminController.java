@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import bit5.team2.account.model.input.InCreateCoAdmin;
 import bit5.team2.account.model.input.InDeleteCoAdmin;
+import bit5.team2.account.model.input.InSuspendAccount;
 import bit5.team2.account.model.input.InUpdateCoAdmin;
 import bit5.team2.account.model.output.OutReadCoAdmin;
 import bit5.team2.account.service.AdminService;
@@ -98,6 +99,50 @@ public class AdminController extends BaseController {
             return errorInput;
         }
     }
+	
+	//suspend account without authorization
+	@PostMapping(value = "/suspend-account", consumes = "application/json")
+    public @ResponseBody
+	ResultEntity<Object> suspendAccount(@RequestBody @Valid InSuspendAccount input,
+                                  BindingResult bindingResult) {
+        ResultEntity<Object> errorInput = this.validateInput(bindingResult);
+        if (errorInput == null) {
+        	boolean output = adminService.suspendAccount(input);
+        	if (output == false) {
+        		return this.failed();
+			} else {
+        		return this.success(null);
+			}
+        }
+        else {
+            return errorInput;
+        }
+    }
+	
+	//suspend account with authorization
+//	@PostMapping(value = "/suspend-account", consumes = "application/json")
+//    public @ResponseBody
+//	ResultEntity<Object> suspendAccount(@RequestBody @Valid InSuspendAccount input, HttpServletRequest request,
+//                                  BindingResult bindingResult) {
+//		
+//		ResultEntity<Object> err = this.unauthorizedUser(request);
+//		if (err != null) {
+//		    return err;
+//		}
+//		
+//        ResultEntity<Object> errorInput = this.validateInput(bindingResult);
+//        if (errorInput == null) {
+//        	boolean output = adminService.suspendAccount(input);
+//        	if (output == false) {
+//        		return this.failed();
+//			} else {
+//        		return this.success(null);
+//			}
+//        }
+//        else {
+//            return errorInput;
+//        }
+//    }
 	
 	//suspend coadmin without authorization
 //	@PostMapping(value = "/suspend-co-admin", consumes = "application/json")
