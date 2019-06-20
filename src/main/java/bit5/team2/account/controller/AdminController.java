@@ -79,6 +79,32 @@ public class AdminController extends BaseController {
         }
     }
 	
+	//create co admin with authorization
+//	@PostMapping(value = "/create-co-admin", consumes = "application/json")
+//    public @ResponseBody
+//	ResultEntity<Object> createCoAdmin(@RequestBody @Valid InCreateCoAdmin input, HttpServletRequest request,
+//                                  BindingResult bindingResult) {
+//		
+//		ResultEntity<Object> err = this.unauthorizedUser(request);
+//        if (err != null) {
+//            return err;
+//        }
+//        
+//        ResultEntity<Object> errorInput = this.validateInput(bindingResult);
+//        String createdBy = "shenron";
+//        if (errorInput == null) {
+//        	int output = adminService.createCoAdmin(input,createdBy);
+//        	if (output == 1) {
+//        		return this.failed();
+//			} else {
+//        		return this.success(null);
+//			}
+//        }
+//        else {
+//            return errorInput;
+//        }
+//    }
+	
 	//get co admin with authorization
 //	@GetMapping("/get-co-admin")
 //    public ResultEntity<Object> getCoAdmin(HttpServletRequest request) {
