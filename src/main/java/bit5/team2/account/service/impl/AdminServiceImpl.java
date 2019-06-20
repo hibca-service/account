@@ -15,6 +15,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import bit5.team2.account.model.input.InApproveOA;
 import bit5.team2.account.model.input.InCreateCoAdmin;
 import bit5.team2.account.model.input.InDeleteCoAdmin;
 import bit5.team2.account.model.input.InSuspendAccount;
@@ -138,6 +139,23 @@ public class AdminServiceImpl extends BaseService implements AdminService {
 //				user.setSuspended(true);
 //			} else {
 //				user.setSuspended(false);
+//			}
+			
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean approveOA(InApproveOA input) {
+		User user = userRepo.findByUsername(input.getUsername());
+		
+		if (user != null) {
+			//if isOA is available
+//			if (input.isOA() == true) {
+//				user.setOA(true);
+//			} else {
+//				user.setOA(false);
 //			}
 			
 			return true;
