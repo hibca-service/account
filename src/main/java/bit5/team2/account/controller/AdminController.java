@@ -1,9 +1,14 @@
 package bit5.team2.account.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,8 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import bit5.team2.account.model.input.InCreateCoAdmin;
+import bit5.team2.account.model.output.OutReadCoAdmin;
 import bit5.team2.account.service.AdminService;
 import bit5.team2.library.base.BaseController;
+import bit5.team2.library.base.PagingProperties;
+import bit5.team2.library.entity.User;
 import bit5.team2.library.output.ResultEntity;
 
 @RestController
@@ -38,5 +46,21 @@ public class AdminController extends BaseController {
         else {
             return errorInput;
         }
+    }
+	
+//	@GetMapping("/get-co-admin")
+//    public ResultEntity<Object> getCoAdmin(HttpServletRequest request) {
+//        ResultEntity<Object> err = this.unauthorizedUser(request);
+//        if (err != null) {
+//            return err;
+//        }
+//        
+//        return this.success(adminService.readCoAdmin());
+//    }
+	
+	@GetMapping("/get-co-admin")
+    public ResultEntity<Object> getCoAdmin() {
+        
+        return this.success(adminService.readCoAdmin());
     }
 }
