@@ -54,7 +54,7 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 
 	@Override
 	public Profile getProfile(String username) {
-		Optional<Profile> profileOptional = profileRepo.findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(username);
+		Optional<Profile> profileOptional = profileRepo.findProfileByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(username);
 		return profileOptional.orElse(null);
     }
 }

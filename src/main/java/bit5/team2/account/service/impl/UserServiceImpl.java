@@ -21,7 +21,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         Pageable pageable = PageRequest.of(pagingProperties.getPage(),pagingProperties.getPageSize(),pagingProperties.getDirection(),pagingProperties.getOrderBy());
         Page<User> users = userRepo.findByKey(pageable,pagingProperties.getSearchKey());
 
-        pagingProperties.setData(users.getContent().size() == 0 ? null : users.getContent());
+        pagingProperties.setContent(users.getContent().size() == 0 ? null : users.getContent());
         pagingProperties.setTotalPage(users.getTotalPages());
         pagingProperties.setTotalData(users.getTotalElements());
 

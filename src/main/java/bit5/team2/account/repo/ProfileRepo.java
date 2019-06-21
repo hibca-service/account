@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface ProfileRepo extends PagingAndSortingRepository<Profile,String> {
-	Optional<Profile> findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(String userId);
+	Optional<Profile> findProfileByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(String userId);
 }
