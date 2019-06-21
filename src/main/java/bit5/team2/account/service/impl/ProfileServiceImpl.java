@@ -1,13 +1,13 @@
 package bit5.team2.account.service.impl;
 
-import bit5.team2.account.model.FollowObject;
+import bit5.team2.account.repo.ProfileRepo;
 import bit5.team2.account.repo.UserFollowRepo;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.ProfileService;
 import bit5.team2.library.base.BaseService;
+import bit5.team2.library.entity.Profile;
 import bit5.team2.library.entity.User;
 import bit5.team2.library.input.account.InChangeProfile;
-import bit5.team2.library.output.account.OutGetProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +17,9 @@ import java.util.Optional;
 public class ProfileServiceImpl extends BaseService implements ProfileService {
 	@Autowired
 	UserRepo userRepo;
+
+	@Autowired
+	ProfileRepo profileRepo;
 
 	@Autowired
 	UserFollowRepo userFollowRepo;
@@ -50,16 +53,8 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 	}
 
 	@Override
-	public OutGetProfile getProfile(String username) {
-		Optional<User> userOptional = userRepo.findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(username);
-		if (userOptional.isPresent()) {
-			OutGetProfile outGetProfile = new OutGetProfile().init(userOptional.get());
-			FollowObject followObject = userFollowRepo.findByUsername(username);
-			outGetProfile.setFollower(followObject.getFollower());
-			outGetProfile.setFollowing(followObject.getFollowing());
-			return outGetProfile;
-		} else {
-			return null;
-		}
+	public Profile getProfile(String username) {
+		Optional<Profile> profileOptional = profileRepo.findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(username);
+		return profileOptional.orElse(null);
     }
 }
