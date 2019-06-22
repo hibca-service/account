@@ -30,16 +30,11 @@ public class UserController extends BaseController {
             }
         }
 
-        try {
-            PagingProperties<Profile> users = userService.getUser(pagingProperties);
-            if (users == null) {
-                return this.empty();
-            } else {
-                return this.success(users);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return this.error(e.getMessage());
+        PagingProperties<Profile> users = userService.getUser(pagingProperties);
+        if (users == null) {
+            return this.empty();
+        } else {
+            return this.success(users);
         }
     }
 }
