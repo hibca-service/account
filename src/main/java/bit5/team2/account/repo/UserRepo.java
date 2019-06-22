@@ -8,14 +8,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface UserRepo extends PagingAndSortingRepository<User,String> {
-	List<User> findUserByUsernameOrPhoneNumber(String username,String phoneNumber);
-
-	Optional<User> findUserByUsernameAndPasswordAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(String username, String password);
+	Optional<User> findUserByUserId(String userId);
 
 	Optional<User> findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(String username);
 

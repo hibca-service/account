@@ -1,7 +1,6 @@
 package bit5.team2.account.service.impl;
 
 import bit5.team2.account.repo.ProfileRepo;
-import bit5.team2.account.repo.UserFollowRepo;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.ProfileService;
 import bit5.team2.library.base.BaseService;
@@ -20,9 +19,6 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 
 	@Autowired
 	ProfileRepo profileRepo;
-
-	@Autowired
-	UserFollowRepo userFollowRepo;
 
 	@Override
 	public boolean changeProfile(String username, InChangeProfile input) {
@@ -54,7 +50,7 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 
 	@Override
 	public Profile getProfile(String username) {
-		Optional<Profile> profileOptional = profileRepo.findProfileByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(username);
+		Optional<Profile> profileOptional = profileRepo.findProfileByUsername(username);
 		return profileOptional.orElse(null);
     }
 }

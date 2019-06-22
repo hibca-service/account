@@ -1,11 +1,11 @@
 package bit5.team2.account.service.impl;
 
 import bit5.team2.account.model.RegisterValidator;
-import bit5.team2.account.repo.AdminRepo;
-import bit5.team2.account.repo.UserFollowRepo;
+import bit5.team2.account.repo.ProfileRepo;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.RegisterService;
 import bit5.team2.library.base.BaseService;
+import bit5.team2.library.entity.Profile;
 import bit5.team2.library.entity.User;
 import bit5.team2.library.input.account.InRegister;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,7 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 	UserRepo userRepo;
 	
 	@Autowired
-	AdminRepo adminRepo;
-	
-	@Autowired
-	UserFollowRepo userFollowRepo;
+	ProfileRepo profileRepo;
 
 	private boolean _isOaValid(InRegister inRegister) {
 		return inRegister.getPurpose() != null;
@@ -36,6 +33,8 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 	private User _createOa(InRegister inRegister) {
 		User user = new User();
 		user.setOa("1");
+		user.setActive("1");
+		user.setOaApprove("1");
 		user.setUsername(inRegister.getUsername());
 		user.setPassword(this.hash(inRegister.getPassword()));
 		user.setPhoneNumber(inRegister.getPhoneNumber());
@@ -46,6 +45,7 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 	private User _createUser(InRegister inRegister) {
 		User user = new User();
 		user.setOa("0");
+		user.setActive("1");
 		user.setUsername(inRegister.getUsername());
 		user.setName(inRegister.getUsername());
 		user.setPassword(this.hash(inRegister.getPassword()));
@@ -59,17 +59,18 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 
 		ArrayList<String> invalid = new ArrayList<>();
 
-		List<User> userList = userRepo.findUserByUsernameOrPhoneNumber(input.getUsername(),input.getPhoneNumber());
+		List<Profile> profileList = profileRepo.findProfileByUsernameOrPhoneNumber(input.getUsername(),input.getPhoneNumber());
 
-		if (userList != null) {
-			for (User user : userList) {
-				if (user.getFirebaseToken() != null) {
-					if (user.getUsername().equals(input.getUsername())) {
-						invalid.add("username");
-					}
-					else if (user.getPhoneNumber().equals(input.getPhoneNumber())) {
-						invalid.add("phone number");
-					}
+		if (profileList != null) {
+			for (Profile user : profileList) {
+				if (invalid.size() == 2) {
+					break;
+				}
+				if (user.getUsername().equals(input.getUsername())) {
+					invalid.add("username");
+				}
+				if (user.getPhoneNumber().equals(input.getPhoneNumber())) {
+					invalid.add("phone number");
 				}
 			}
 		}
