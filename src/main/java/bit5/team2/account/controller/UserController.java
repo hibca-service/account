@@ -1,10 +1,9 @@
 package bit5.team2.account.controller;
 
-import bit5.team2.account.service.impl.UserServiceImpl;
+import bit5.team2.account.service.UserService;
 import bit5.team2.library.base.BaseController;
 import bit5.team2.library.base.PagingProperties;
 import bit5.team2.library.entity.Profile;
-import bit5.team2.library.entity.User;
 import bit5.team2.library.output.ResultEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/account")
 public class UserController extends BaseController {
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
 
     @GetMapping("/get-user")
     public ResultEntity<Object> getUser(HttpServletRequest request,
