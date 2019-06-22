@@ -21,7 +21,7 @@ public class UserController extends BaseController {
     @GetMapping("/get-user")
     public ResultEntity<Object> getUser(HttpServletRequest request,
                                         PagingProperties<User> pagingProperties) {
-        ResultEntity<Object> err = this.unauthorizedUser(request);
+        ResultEntity<Object> err = this.unauthorizedAdmin(request);
         if (err != null) {
             return err;
         }

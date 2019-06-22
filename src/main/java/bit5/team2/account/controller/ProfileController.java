@@ -28,7 +28,7 @@ public class ProfileController extends BaseController {
             return err;
         }
 
-        Profile output = profileService.getProfile(username.orElse((String) this.data.get("username")));
+        Profile output = profileService.getProfile(username.orElse((String) this.dataUser.get("username")));
 
         if (output == null) {
             return this.failed();
@@ -49,7 +49,7 @@ public class ProfileController extends BaseController {
 
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
-            if (profileService.changeProfile((String) this.data.get("username"),input)) {
+            if (profileService.changeProfile((String) this.dataUser.get("username"),input)) {
                 return this.success(null);
             } else {
                 return this.failed();
