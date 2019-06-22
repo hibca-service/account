@@ -17,36 +17,9 @@ public class AdminLoginServiceImpl extends BaseService implements AdminLoginServ
     AdminRepo adminRepo;
 
     @Override
-    public OutLoginWeb login(String username, String password) {
-        String hashedPassword = this.hash(password);
-        if (hashedPassword == null) {
-            return null;
-        }
-
-        Optional<Admin> adminOptional = adminRepo.findAdminByAdminUsernameAndAdminPassword(username, password);
-        return adminOptional.map(this::_generateToken).orElse(null);
-    }
-
-    @Override
     public OutLoginWeb reLogin(String adminId, String refreshToken) {
         Optional<Admin> adminOptional = adminRepo.findAdminByAdminId(adminId);
-        return adminOptional.map(this::_generateToken).orElse(null);
-    }
-
-    private OutLoginWeb _generateToken(Admin admin) {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("adminId", admin.getAdminId());
-        String refresh = this.createRefreshToken(map, true);
-        map.put("adminname", admin.getAdminUsername());
-        map.put("superAdmin", admin.getAdminCode());
-        String access = this.createAccessToken(map, true);
-
-        OutLoginWeb token = new OutLoginWeb();
-        token.setAccessToken(access);
-        token.setRefreshToken(refresh);
-        token.setSuperAdmin(admin.getAdminCode() == 1);
-
-        return token;
+        return adminOptional.map(admin -> this._generateToken(admin, refreshToken)).orElse(null);
     }
 
     private OutLoginWeb _generateToken(Admin admin, String refreshToken) {
