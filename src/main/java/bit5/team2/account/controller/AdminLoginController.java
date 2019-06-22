@@ -1,6 +1,6 @@
 package bit5.team2.account.controller;
 
-import bit5.team2.account.service.LoginService;
+import bit5.team2.account.service.AdminLoginService;
 import bit5.team2.library.base.BaseController;
 import bit5.team2.library.input.account.InLogin;
 import bit5.team2.library.output.ResultEntity;
@@ -14,7 +14,7 @@ import javax.validation.Valid;
 @RequestMapping("/admin")
 public class AdminLoginController extends BaseController {
     @Autowired
-    LoginService loginService;
+    AdminLoginService adminLoginService;
 
     @PostMapping(value = "/login", consumes = "application/json")
     public @ResponseBody
@@ -22,7 +22,7 @@ public class AdminLoginController extends BaseController {
                                BindingResult bindingResult) {
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
-            Object output = loginService.login(input.getUsername(),input.getPassword());
+            Object output = adminLoginService.login(input.getUsername(),input.getPassword());
             if (output == null) {
                 return this.failed();
             } else {

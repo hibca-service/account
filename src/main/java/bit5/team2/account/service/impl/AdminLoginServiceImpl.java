@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 @Service
 public class AdminLoginServiceImpl extends BaseService implements AdminLoginService {
@@ -22,23 +23,44 @@ public class AdminLoginServiceImpl extends BaseService implements AdminLoginServ
             return null;
         }
 
-        Admin admin = adminRepo.findAdminByAdminUsernameAndAdminPassword(username, password);
-        if (admin == null) {
-            return null;
-        } else {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("userId", admin.getAdminId());
-            map.put("username", username);
-            String refresh = this.createRefreshToken(map, true);
-            map.put("superAdmin", admin.getAdminCode());
-            String access = this.createAccessToken(map, true);
+        Optional<Admin> adminOptional = adminRepo.findAdminByAdminUsernameAndAdminPassword(username, password);
+        return adminOptional.map(this::_generateToken).orElse(null);
+    }
 
-            OutLoginWeb token = new OutLoginWeb();
-            token.setAccessToken(access);
-            token.setRefreshToken(refresh);
-            token.setSuperAdmin(admin.getAdminCode() == 1);
+    @Override
+    public OutLoginWeb reLogin(String adminId, String refreshToken) {
+        Optional<Admin> adminOptional = adminRepo.findAdminByAdminId(adminId);
+        return adminOptional.map(this::_generateToken).orElse(null);
+    }
 
-            return token;
-        }
+    private OutLoginWeb _generateToken(Admin admin) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("adminId", admin.getAdminId());
+        String refresh = this.createRefreshToken(map, true);
+        map.put("adminname", admin.getAdminUsername());
+        map.put("superAdmin", admin.getAdminCode());
+        String access = this.createAccessToken(map, true);
+
+        OutLoginWeb token = new OutLoginWeb();
+        token.setAccessToken(access);
+        token.setRefreshToken(refresh);
+        token.setSuperAdmin(admin.getAdminCode() == 1);
+
+        return token;
+    }
+
+    private OutLoginWeb _generateToken(Admin admin, String refreshToken) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("adminId", admin.getAdminId());
+        map.put("adminname", admin.getAdminUsername());
+        map.put("superAdmin", admin.getAdminCode());
+        String access = this.createAccessToken(map, true);
+
+        OutLoginWeb token = new OutLoginWeb();
+        token.setAccessToken(access);
+        token.setRefreshToken(refreshToken);
+        token.setSuperAdmin(admin.getAdminCode() == 1);
+
+        return token;
     }
 }

@@ -28,7 +28,7 @@ public class VerificationServiceImpl implements VerificationService {
 	}
 	
 //	public int viaEmail(String id) {
-//		User user = userRepo.findById(id);
+//		User user = profileRepo.findById(id);
 //		if (user != null) {
 //			if (user.isEmailVerified() == false) {
 //				user.setEmailVerified(true);

@@ -11,9 +11,14 @@ import bit5.team2.account.model.output.OutReadCoAdmin;
 
 public interface AdminService {
 	public int createCoAdmin(InCreateCoAdmin input, String createdBy);
+
 	public List<OutReadCoAdmin> readCoAdmin();
+
 	public boolean updateCoAdmin(InUpdateCoAdmin input, String adminId);
+
 	public boolean suspendCoAdmin(InDeleteCoAdmin input);
+
 	public boolean suspendAccount(InSuspendAccount input);
+
 	public boolean approveOA(InApproveOA input);
 }

@@ -19,7 +19,4 @@ public interface UserRepo extends PagingAndSortingRepository<User,String> {
 	Optional<User> findUserByUserIdAndFirebaseTokenIsNullAndFirebaseUUIDIsNull(String userId);
 	
 	User findByUsername(String username);
-
-	@Query("select s from User s where (name like %:key% or username like %:key% or phoneNumber like %:key%) and firebaseToken is not null and firebaseUUID is not null")
-	Page<User> findByKey(Pageable pageable, @Param("key") String key);
 }

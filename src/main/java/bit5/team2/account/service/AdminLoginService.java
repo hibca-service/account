@@ -1,5 +1,9 @@
 package bit5.team2.account.service;
 
+import bit5.team2.library.output.account.OutLoginWeb;
+
 public interface AdminLoginService {
-	Object login(String username, String password);
+	OutLoginWeb login(String username, String password);
+
+	OutLoginWeb reLogin(String userId, String refreshToken);
 }

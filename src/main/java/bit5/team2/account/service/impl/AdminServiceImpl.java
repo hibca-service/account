@@ -19,6 +19,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AdminServiceImpl extends BaseService implements AdminService {
@@ -77,9 +78,10 @@ public class AdminServiceImpl extends BaseService implements AdminService {
 	}
 	
 	public boolean updateCoAdmin(InUpdateCoAdmin input, String adminId) {
-		Admin admin = adminRepo.findAdminByAdminId(adminId);
+		Optional<Admin> adminOptional = adminRepo.findAdminByAdminId(adminId);
 		
-		if (admin != null) {
+		if (adminOptional.isPresent()) {
+			Admin admin = adminOptional.get();
 			int flag = 0;
 //			if (input.getAdminName() != null && input.getAdminName() != "") {
 //				admin.setAdminName(input.getAdminName());
@@ -107,9 +109,10 @@ public class AdminServiceImpl extends BaseService implements AdminService {
 	}
 	
 	public boolean suspendCoAdmin(InDeleteCoAdmin input) {
-		Admin admin = adminRepo.findAdminByAdminUsername(input.getAdminUsername());
-		
-		if (admin != null) {
+		Optional<Admin> adminOptional = adminRepo.findAdminByAdminUsername(input.getAdminUsername());
+
+		if (adminOptional.isPresent()) {
+			Admin admin = adminOptional.get();
 			//if isactive parameter is available
 //			if (input.isActive() == true) {
 //				admin.setActive(true);

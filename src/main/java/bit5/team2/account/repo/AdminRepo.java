@@ -8,11 +8,15 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface AdminRepo extends PagingAndSortingRepository<Admin,String> {
-    Admin findAdminByAdminUsernameAndAdminPassword(String username,String password);
-    Admin findAdminByAdminId(String adminId);
-    Admin findAdminByAdminUsername(String username);
+    Optional<Admin> findAdminByAdminUsernameAndAdminPassword(String username, String password);
+
+    Optional<Admin> findAdminByAdminId(String adminId);
+
+    Optional<Admin> findAdminByAdminUsername(String username);
     
 	@Query("select s from Admin s where (adminName like %:key% or adminUsername like %:key%) ")
 	Page<Admin> findByKey(Pageable pageable, @Param("key") String key);

@@ -3,6 +3,7 @@ package bit5.team2.account.controller;
 import bit5.team2.account.service.impl.UserServiceImpl;
 import bit5.team2.library.base.BaseController;
 import bit5.team2.library.base.PagingProperties;
+import bit5.team2.library.entity.Profile;
 import bit5.team2.library.entity.User;
 import bit5.team2.library.output.ResultEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,17 @@ public class UserController extends BaseController {
 
     @GetMapping("/get-user")
     public ResultEntity<Object> getUser(HttpServletRequest request,
-                                        PagingProperties<User> pagingProperties) {
-        ResultEntity<Object> err = this.unauthorizedAdmin(request);
-        if (err != null) {
-            return err;
+                                        PagingProperties<Profile> pagingProperties) {
+        ResultEntity<Object> errUser = this.unauthorizedUser(request);
+        if (errUser != null) {    //	auth user failed
+            ResultEntity<Object> errAdmin = this.unauthorizedAdmin(request);
+            if (errAdmin != null) {	//	auth admin failed
+                return this.unauthorized();
+            }
         }
 
         try {
-            PagingProperties<User> users = userService.getUser(pagingProperties);
+            PagingProperties<Profile> users = userService.getUser(pagingProperties);
             if (users == null) {
                 return this.empty();
             } else {

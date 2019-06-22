@@ -29,29 +29,55 @@ public class LoginServiceImpl extends BaseService implements LoginService {
         }
 
         Optional<Profile> profileOptional = profileRepo.findProfileByUsernameAndPassword(username, hashedPassword);
-        if (profileOptional.isPresent()) {
-            Optional<User> userOptional = userRepo.findUserByUserId(profileOptional.get().getUserId());
-            if (userOptional.isPresent()) {
-                User user = userOptional.get();
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("type", "user token");
-                map.put("userId", user.getUserId());
-                map.put("username", username);
-                String refresh = this.createRefreshToken(map, false);
-                map.put("name", user.getName());
-                map.put("dateOfBirth", user.getDateOfBirth());
-                map.put("purpose", user.getPurpose());
-                map.put("oa", user.getOa());
-                String access = this.createRefreshToken(map, false);
+        return profileOptional.map(profile -> this.generateToken(profile.getUserId())).orElse(null);
+    }
 
-                OutLoginMobile token = new OutLoginMobile();
-                token.setAccessToken(access);
-                token.setRefreshToken(refresh);
+    @Override
+    public OutLoginMobile generateToken(String userId) {
+        Optional<User> userOptional = userRepo.findUserByUserId(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("type", "user token");
+            map.put("userId", user.getUserId());
+            String refresh = this.createRefreshToken(map, false);
+            map.put("username", user.getUsername());
+            map.put("name", user.getName());
+            map.put("dateOfBirth", user.getDateOfBirth());
+            map.put("purpose", user.getPurpose());
+            map.put("oa", user.getOa());
+            String access = this.createRefreshToken(map, false);
 
-                return token;
-            } else {
-                return null;
-            }
+            OutLoginMobile token = new OutLoginMobile();
+            token.setAccessToken(access);
+            token.setRefreshToken(refresh);
+
+            return token;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public OutLoginMobile generateToken(String userId, String refreshToken) {
+        Optional<User> userOptional = userRepo.findUserByUserId(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("type", "user token");
+            map.put("userId", user.getUserId());
+            map.put("username", user.getUsername());
+            map.put("name", user.getName());
+            map.put("dateOfBirth", user.getDateOfBirth());
+            map.put("purpose", user.getPurpose());
+            map.put("oa", user.getOa());
+            String access = this.createRefreshToken(map, false);
+
+            OutLoginMobile token = new OutLoginMobile();
+            token.setAccessToken(access);
+            token.setRefreshToken(refreshToken);
+
+            return token;
         } else {
             return null;
         }
