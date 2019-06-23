@@ -22,10 +22,10 @@ public class UserController extends BaseController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/get-user")
+    @PostMapping("/get-user")
     public ResultEntity<Object> getUser(HttpServletRequest request,
                                         PagingProperties<Profile> pagingProperties,
-                                        Optional<List<String>> usedIds) {
+                                        @RequestBody Optional<List<String>> usedIds) {
         ResultEntity<Object> errUser = this.unauthorizedUser(request);
         if (errUser != null) {    //	auth user failed
             ResultEntity<Object> errAdmin = this.unauthorizedAdmin(request);
@@ -47,7 +47,7 @@ public class UserController extends BaseController {
         }
     }
 
-    @PostMapping(value = "/change-account-status", consumes = "application/json")
+    @PutMapping(value = "/change-account-status", consumes = "application/json")
     public @ResponseBody
     ResultEntity<Object> changeAccountStatus(HttpServletRequest request,
                                              @RequestBody @Valid InChangeAccountStatus input,
@@ -70,7 +70,7 @@ public class UserController extends BaseController {
         }
     }
 
-    @PostMapping(value = "/change-oa-status", consumes = "application/json")
+    @PutMapping(value = "/change-oa-status", consumes = "application/json")
     public @ResponseBody
     ResultEntity<Object> changeOAStatus(HttpServletRequest request,
                                         @RequestBody @Valid InChangeOAStatus input,

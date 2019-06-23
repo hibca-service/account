@@ -23,7 +23,7 @@
         <dependency>
             <groupId>bit5.team2</groupId>
             <artifactId>library</artifactId>
-            <version>0.1.29-SNAPSHOT</version>
+            <version>0.1.30-SNAPSHOT</version>
             <classifier>app-to-import</classifier>
         </dependency>
 <!--		oracle jdbc-->
