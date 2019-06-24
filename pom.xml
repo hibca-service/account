@@ -24,10 +24,14 @@
         <dependency>
             <groupId>bit5.team2</groupId>
             <artifactId>library</artifactId>
-
             <version>0.1.33-SNAPSHOT</version>
             <classifier>app-to-import</classifier>
         </dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>com.oracle.jdbc</groupId>
@@ -107,4 +111,15 @@
 		</pluginRepository>
 	</pluginRepositories>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>
