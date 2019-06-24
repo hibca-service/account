@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
-@EntityScan(basePackages = {"bit5.team2.library.entity"})
+@EntityScan(basePackages = {"bit5.team2.library.entity","bit5.team2.library.view"})
 public class AccountApplication {
 
 	public static void main(String[] args) {
