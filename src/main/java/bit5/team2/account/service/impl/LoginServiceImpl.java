@@ -4,9 +4,9 @@ import bit5.team2.account.repo.ProfileRepo;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.LoginService;
 import bit5.team2.library.base.BaseService;
-import bit5.team2.library.entity.Profile;
 import bit5.team2.library.entity.User;
 import bit5.team2.library.output.account.OutLoginMobile;
+import bit5.team2.library.view.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
