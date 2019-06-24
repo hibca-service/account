@@ -1,6 +1,6 @@
 package bit5.team2.account.repo;
 
-import bit5.team2.library.view.Profile;
+import bit5.team2.library.entity.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;

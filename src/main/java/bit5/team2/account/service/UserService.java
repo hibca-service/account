@@ -1,7 +1,7 @@
 package bit5.team2.account.service;
 
 import bit5.team2.library.base.PagingProperties;
-import bit5.team2.library.view.Profile;
+import bit5.team2.library.entity.Profile;
 
 import java.util.List;
 

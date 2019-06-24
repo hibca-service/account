@@ -1,12 +1,12 @@
 package bit5.team2.account.controller;
 
-import bit5.team2.account.model.input.InChangeAccountStatus;
 import bit5.team2.account.model.input.InChangeOAStatus;
+import bit5.team2.account.model.input.InChangeAccountStatus;
 import bit5.team2.account.service.UserService;
 import bit5.team2.library.base.BaseController;
 import bit5.team2.library.base.PagingProperties;
+import bit5.team2.library.entity.Profile;
 import bit5.team2.library.output.ResultEntity;
-import bit5.team2.library.view.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
