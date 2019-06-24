@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HealthCheck extends BaseController {
-    @GetMapping("/account")
+    @GetMapping("/account/")
     public ResultEntity<Object> success1() {
         return this.success(null);
     }
 
-    @GetMapping("/verification")
+    @GetMapping("/verification/")
     public ResultEntity<Object> success2() {
         return this.success(null);
     }
