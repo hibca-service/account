@@ -23,7 +23,7 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 	ProfileRepo profileRepo;
 
 	private boolean _isOaValid(InRegister inRegister) {
-		return inRegister.getPurpose() != null;
+		return true;
 	}
 
 	private boolean _isUserValid(InRegister inRegister) {
@@ -38,7 +38,6 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 		user.setUsername(inRegister.getUsername());
 		user.setPassword(this.hash(inRegister.getPassword()));
 		user.setPhoneNumber(inRegister.getPhoneNumber());
-		user.setPurpose(inRegister.getPurpose());
 		return user;
 	}
 
