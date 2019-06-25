@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/account")
+@CrossOrigin(origins = "*")
 public class UserController extends BaseController {
     @Autowired
     UserService userService;

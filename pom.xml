@@ -25,7 +25,7 @@
             <groupId>bit5.team2</groupId>
             <artifactId>library</artifactId>
 
-            <version>0.1.33-SNAPSHOT</version>
+            <version>0.1.43-SNAPSHOT</version>
             <classifier>app-to-import</classifier>
         </dependency>
 

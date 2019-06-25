@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/verification")
+@CrossOrigin(origins = "*")
 public class VerificationController extends BaseController {
 	@Autowired
 	VerificationService verificationService;

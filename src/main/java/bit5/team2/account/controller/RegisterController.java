@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/account")
+@CrossOrigin(origins = "*")
 public class RegisterController extends BaseController {
     @Autowired
     RegisterService registerService;

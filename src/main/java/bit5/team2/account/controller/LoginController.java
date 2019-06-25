@@ -12,6 +12,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/account")
+@CrossOrigin(origins = "*")
 public class LoginController extends BaseController {
     @Autowired
     LoginService loginService;

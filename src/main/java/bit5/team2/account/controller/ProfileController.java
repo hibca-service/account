@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/account")
+@CrossOrigin(origins = "*")
 public class ProfileController extends BaseController {
     @Autowired
     ProfileService profileService;
