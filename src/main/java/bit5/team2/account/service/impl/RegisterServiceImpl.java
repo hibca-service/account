@@ -58,10 +58,10 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 
 		ArrayList<String> invalid = new ArrayList<>();
 
-		List<Profile> profileList = profileRepo.findProfileByUsernameOrPhoneNumber(input.getUsername(),input.getPhoneNumber());
+		List<User> userList = userRepo.findUserByUsernameOrPhoneNumber(input.getUsername(),input.getPhoneNumber());
 
-		if (profileList != null) {
-			for (Profile user : profileList) {
+		if (userList != null) {
+			for (User user : userList) {
 				if (invalid.size() == 2) {
 					break;
 				}

@@ -17,8 +17,6 @@ public interface ProfileRepo extends PagingAndSortingRepository<Profile,String> 
 
 	Optional<Profile> findProfileByUsernameAndPassword(String userId,String password);
 
-	List<Profile> findProfileByUsernameOrPhoneNumber(String userId, String phoneNumber);
-
 	@Query("select p from Profile p where p.name like %:key% or p.username like %:key% or p.phoneNumber like %:key%")
 	Page<Profile> findByKey(Pageable pageable, @Param("key") String key);
 
