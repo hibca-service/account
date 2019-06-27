@@ -8,10 +8,12 @@ import bit5.team2.library.output.account.OutLoginWeb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class AdminLoginServiceImpl extends BaseService implements AdminLoginService {
     @Autowired
     AdminRepo adminRepo;

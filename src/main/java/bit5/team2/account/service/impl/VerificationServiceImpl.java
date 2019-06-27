@@ -7,9 +7,11 @@ import bit5.team2.library.input.account.InVerificationPhone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class VerificationServiceImpl implements VerificationService {
 	@Autowired
 	UserRepo userRepo;

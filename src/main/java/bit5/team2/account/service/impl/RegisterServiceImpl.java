@@ -7,14 +7,15 @@ import bit5.team2.account.service.RegisterService;
 import bit5.team2.library.base.BaseService;
 import bit5.team2.library.entity.User;
 import bit5.team2.library.input.account.InRegister;
-import bit5.team2.library.view.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class RegisterServiceImpl extends BaseService implements RegisterService {
 	@Autowired
 	UserRepo userRepo;
