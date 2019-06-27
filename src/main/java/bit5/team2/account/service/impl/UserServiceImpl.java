@@ -1,11 +1,15 @@
 package bit5.team2.account.service.impl;
 
+import bit5.team2.account.repo.FollowRepo;
 import bit5.team2.account.repo.ProfileRepo;
+import bit5.team2.account.repo.ProfileRepoEM;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.UserService;
 import bit5.team2.library.base.BaseService;
 import bit5.team2.library.base.PagingProperties;
 import bit5.team2.library.entity.User;
+import bit5.team2.library.entity.UserFollow;
+import bit5.team2.library.output.social.Profiles;
 import bit5.team2.library.view.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,14 +27,45 @@ public class UserServiceImpl extends BaseService implements UserService {
     ProfileRepo profileRepo;
 
     @Autowired
+    ProfileRepoEM profileRepoEM;
+
+    @Autowired
     UserRepo userRepo;
 
+    @Autowired
+    FollowRepo followRepo;
+
     @Override
-    public PagingProperties<Profile> getUser(PagingProperties<Profile> pagingProperties) {
+    public PagingProperties<Profiles> getUser(PagingProperties<Profiles> pagingProperties, String userLogin) {
         Pageable pageable = PageRequest.of(pagingProperties.getPage(),pagingProperties.getPageSize(),pagingProperties.getDirection(),pagingProperties.getOrderBy());
         Page<Profile> profiles = profileRepo.findByKey(pageable,pagingProperties.getSearchKey());
 
-        pagingProperties.setContent(profiles.getContent().size() == 0 ? null : profiles.getContent());
+        List<String> followed = this._getFollowing(userLogin);
+
+        List<Profiles> profilesList = new ArrayList<>();
+        for(Profile profile : profiles) {
+            Profiles temp = new Profiles();
+            temp.setUserId(profile.getUserId());
+            temp.setOa(profile.getOa());
+            temp.setUsername(profile.getUsername());
+            temp.setName(profile.getName());
+            temp.setPathProfilePicture(profile.getPathProfilePicture());
+            temp.setDateOfBirth(profile.getDateOfBirth());
+            temp.setCityOfBirth(profile.getCityOfBirth());
+            temp.setUserGender(profile.getUserGender());
+            temp.setPhoneNumber(profile.getPhoneNumber());
+            temp.setPurpose(profile.getPurpose());
+            temp.setOaApprove(profile.getOaApprove());
+            temp.setActive(profile.getActive());
+            temp.setFirebaseToken(profile.getFirebaseToken());
+            temp.setFirebaseUUID(profile.getFirebaseUUID());
+            temp.setFollower(profile.getFollower());
+            temp.setFollowing(profile.getFollowing());
+            temp.setAlreadyFollowed(profile.getUserId().equals(userLogin) ? null : followed.contains(profile.getUserId()));
+            profilesList.add(temp);
+        }
+
+        pagingProperties.setContent(profilesList.size() == 0 ? null : profilesList);
         pagingProperties.setTotalPage(profiles.getTotalPages());
         pagingProperties.setTotalData(profiles.getTotalElements());
 
@@ -37,15 +73,8 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public PagingProperties<Profile> getUser(PagingProperties<Profile> pagingProperties, List<String> userIds) {
-        Pageable pageable = PageRequest.of(pagingProperties.getPage(),pagingProperties.getPageSize(),pagingProperties.getDirection(),pagingProperties.getOrderBy());
-        Page<Profile> profiles = profileRepo.findByKeyAndUserId(pageable,pagingProperties.getSearchKey(),userIds);
-
-        pagingProperties.setContent(profiles.getContent().size() == 0 ? null : profiles.getContent());
-        pagingProperties.setTotalPage(profiles.getTotalPages());
-        pagingProperties.setTotalData(profiles.getTotalElements());
-
-        return pagingProperties;
+    public PagingProperties<User> getUser(PagingProperties<User> pagingProperties, Optional<Boolean> isOa, Optional<Boolean>  isOaApproved) {
+        return profileRepoEM.getUser(pagingProperties, isOa.orElse(null),isOaApproved.orElse(null), null);
     }
 
     @Override
@@ -73,4 +102,16 @@ public class UserServiceImpl extends BaseService implements UserService {
             return false;
         }
     }
+
+    private List<String> _getFollowing(String userId) {
+        List<UserFollow> userFollows = followRepo.findByFollowedUserIdAndFollowEndDateIsNull(userId);
+        List<String> userIds = new ArrayList<>();
+        if ( ! userFollows.isEmpty()) {
+            for (UserFollow userFollow : userFollows) {
+                userIds.add(userFollow.getFollowingUserId());
+            }
+        }
+        return userIds;
+    }
+
 }

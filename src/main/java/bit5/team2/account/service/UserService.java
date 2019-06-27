@@ -1,14 +1,16 @@
 package bit5.team2.account.service;
 
 import bit5.team2.library.base.PagingProperties;
+import bit5.team2.library.entity.User;
+import bit5.team2.library.output.social.Profiles;
 import bit5.team2.library.view.Profile;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
-    PagingProperties<Profile> getUser(PagingProperties<Profile> pagingProperties);
+    PagingProperties<Profiles> getUser(PagingProperties<Profiles> pagingProperties, String userId);
 
-    PagingProperties<Profile> getUser(PagingProperties<Profile> pagingProperties, List<String> userIds);
+    PagingProperties<User> getUser(PagingProperties<User> pagingProperties, Optional<Boolean> isOa, Optional<Boolean>  isOaApproved);
 
     boolean changeAccountStatus(String userId, boolean isSuspended);
 

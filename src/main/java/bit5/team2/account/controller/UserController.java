@@ -5,7 +5,10 @@ import bit5.team2.account.model.input.InChangeOAStatus;
 import bit5.team2.account.service.UserService;
 import bit5.team2.library.base.BaseController;
 import bit5.team2.library.base.PagingProperties;
+import bit5.team2.library.entity.User;
+import bit5.team2.library.input.account.InGetUser;
 import bit5.team2.library.output.ResultEntity;
+import bit5.team2.library.output.social.Profiles;
 import bit5.team2.library.view.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -13,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,27 +27,25 @@ public class UserController extends BaseController {
 
     @PostMapping("/get-user")
     public ResultEntity<Object> getUser(HttpServletRequest request,
-                                        PagingProperties<Profile> pagingProperties,
-                                        @RequestBody Optional<List<String>> usedIds) {
-        ResultEntity<Object> errUser = this.unauthorizedUser(request);
-        if (errUser != null) {    //	auth user failed
-            ResultEntity<Object> errAdmin = this.unauthorizedAdmin(request);
-            if (errAdmin != null) {	//	auth admin failed
-                return this.unauthorized();
-            }
+                                        PagingProperties<Profiles> pagingProperties) {
+        ResultEntity<Object> err = this.unauthorizedUser(request);
+        if (err != null) {
+            return err;
+        }
+        return this.success(userService.getUser(pagingProperties,this.dataUser.get("userId").toString()));
+    }
+
+    @GetMapping("/get-user")
+    public ResultEntity<Object> getUsers(HttpServletRequest request,
+                                         PagingProperties<User> pagingProperties,
+                                         @RequestParam Optional<Boolean> isOa,
+                                         @RequestParam Optional<Boolean> isOaApproved) {
+        ResultEntity<Object> errAdmin = this.unauthorizedAdmin(request);
+        if (errAdmin != null) {
+            return this.unauthorized();
         }
 
-        PagingProperties<Profile> users;
-        if (usedIds.isPresent()) {
-            users = userService.getUser(pagingProperties,usedIds.get());
-        } else {
-            users = userService.getUser(pagingProperties);
-        }
-        if (users == null) {
-            return this.empty();
-        } else {
-            return this.success(users);
-        }
+        return this.success(userService.getUser(pagingProperties,isOa,isOaApproved));
     }
 
     @PutMapping(value = "/change-account-status", consumes = "application/json")
