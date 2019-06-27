@@ -36,6 +36,7 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 		user.setActive("1");
 		user.setOaApprove("1");
 		user.setUsername(inRegister.getUsername());
+		user.setName(inRegister.getUsername());
 		user.setPassword(this.hash(inRegister.getPassword()));
 		user.setPhoneNumber(inRegister.getPhoneNumber());
 		return user;
@@ -78,6 +79,7 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 				case "1":
 					if (_isOaValid(input)) {
 						User user = this._createOa(input);
+						System.out.println(user);
 						this.userRepo.save(user);
 						registerValidator.setUserId(user.getUserId());
 					}
