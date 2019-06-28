@@ -27,6 +27,9 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 		Optional<User> userOptional = userRepo.findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(username);
 		if (userOptional.isPresent()) {
 			User user = userOptional.get();
+			if (input.getPathProfilePicture() != null && !input.getPathProfilePicture().equals("")) {
+				user.setPathProfilePicture(this.hash(input.getPathProfilePicture()));
+			}
 			if (input.getPassword() != null && !input.getPassword().equals("")) {
 				user.setPassword(this.hash(input.getPassword()));
 			}
