@@ -6,10 +6,8 @@ import bit5.team2.account.service.UserService;
 import bit5.team2.library.base.BaseController;
 import bit5.team2.library.base.PagingProperties;
 import bit5.team2.library.entity.User;
-import bit5.team2.library.input.account.InGetUser;
 import bit5.team2.library.output.ResultEntity;
 import bit5.team2.library.output.social.Profiles;
-import bit5.team2.library.view.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -39,13 +37,14 @@ public class UserController extends BaseController {
     public ResultEntity<Object> getUsers(HttpServletRequest request,
                                          PagingProperties<User> pagingProperties,
                                          @RequestParam Optional<Boolean> isOa,
-                                         @RequestParam Optional<Boolean> isOaApproved) {
+                                         @RequestParam Optional<Boolean> isOaApproved,
+                                         @RequestParam Optional<Boolean> isActive) {
         ResultEntity<Object> errAdmin = this.unauthorizedAdmin(request);
         if (errAdmin != null) {
             return this.unauthorized();
         }
 
-        return this.success(userService.getUser(pagingProperties,isOa,isOaApproved));
+        return this.success(userService.getUser(pagingProperties,isOa,isOaApproved,isActive));
     }
 
     @PutMapping(value = "/change-account-status", consumes = "application/json")

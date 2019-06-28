@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ProfileRepoEM {
+public class UserRepoEM {
     @PersistenceContext
     EntityManager entityManager;
 
     @Transactional
-    public PagingProperties<User> getUser(PagingProperties<User> pagingProperties, Boolean oa, Boolean oaApproved, List<String> userId) {
+    public PagingProperties<User> getUser(PagingProperties<User> pagingProperties, Boolean oa, Boolean oaApproved, Boolean active, List<String> userId) {
         Pageable pageable = PageRequest.of(pagingProperties.getPage(), pagingProperties.getPageSize(), pagingProperties.getDirection(), pagingProperties.getOrderBy());
         String searchKey = pagingProperties.getSearchKey();
 
@@ -48,6 +48,9 @@ public class ProfileRepoEM {
                         )
                 );
             }
+        }
+        if (active != null) {
+            combined.add(criteriaBuilder.equal(root.get("active"), active ? "1" : "0"));
         }
         if (searchKey != null && !searchKey.equals("")) {
             searchKey = searchKey.replaceAll("%", "\\%").replaceAll("_", "\\_");
