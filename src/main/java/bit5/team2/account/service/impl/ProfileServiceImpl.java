@@ -28,7 +28,7 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 		if (userOptional.isPresent()) {
 			User user = userOptional.get();
 			if (input.getPathProfilePicture() != null && !input.getPathProfilePicture().equals("")) {
-				user.setPathProfilePicture(this.hash(input.getPathProfilePicture()));
+				user.setPathProfilePicture(input.getPathProfilePicture());
 			}
 			if (input.getPassword() != null && !input.getPassword().equals("")) {
 				user.setPassword(this.hash(input.getPassword()));
