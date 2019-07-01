@@ -1,11 +1,11 @@
 package bit5.team2.account.service.impl;
 
+import bit5.team2.account.model.output.OutLoginMobile;
 import bit5.team2.account.repo.ProfileRepo;
 import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.LoginService;
 import bit5.team2.library.base.BaseService;
 import bit5.team2.library.entity.User;
-import bit5.team2.library.output.account.OutLoginMobile;
 import bit5.team2.library.view.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +42,7 @@ public class LoginServiceImpl extends BaseService implements LoginService {
             HashMap<String, Object> map = new HashMap<>();
             map.put("type", "user token");
             map.put("userId", user.getUserId());
-            String refresh = this.createRefreshToken(map, false);
+            String refresh = this.createAccessToken(map, false);
             map.put("username", user.getUsername());
             map.put("name", user.getName());
             map.put("dateOfBirth", user.getDateOfBirth());

@@ -1,5 +1,6 @@
 package bit5.team2.account.service.impl;
 
+import bit5.team2.account.model.output.Profiles;
 import bit5.team2.account.repo.FollowRepo;
 import bit5.team2.account.repo.ProfileRepo;
 import bit5.team2.account.repo.UserRepoEM;
@@ -9,7 +10,6 @@ import bit5.team2.library.base.BaseService;
 import bit5.team2.library.base.PagingProperties;
 import bit5.team2.library.entity.User;
 import bit5.team2.library.entity.UserFollow;
-import bit5.team2.library.output.social.Profiles;
 import bit5.team2.library.view.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
