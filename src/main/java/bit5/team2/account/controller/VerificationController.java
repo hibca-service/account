@@ -9,12 +9,14 @@ import bit5.team2.account.service.VerificationService;
 import bit5.team2.library.base.BaseController;
 import bit5.team2.library.output.ResultEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@RefreshScope
 @RequestMapping("/verification")
 @CrossOrigin(origins = "*")
 public class VerificationController extends BaseController {
@@ -42,10 +44,10 @@ public class VerificationController extends BaseController {
 		}
 	}
 
-	@GetMapping(value = "/auth")
-	public @ResponseBody ResultEntity<Object> reAuth(HttpServletRequest request) {
-		ResultEntity<Object> errUser = this.unauthorizedUser(request);
-		if (errUser == null) {    //	auth user success
+	@GetMapping(value = "/auth-user")
+	public @ResponseBody ResultEntity<Object> reAuthUser(HttpServletRequest request) {
+		ResultEntity<Object> err = this.unauthorizedUser(request);
+		if (err == null) {    //	auth user success
 			OutLoginMobile output = loginService.generateToken(this.dataUser.get("userId").toString(), request.getHeader("Authorization"));
 			if (output != null) {
 				return this.success(output);
@@ -53,17 +55,22 @@ public class VerificationController extends BaseController {
 				return this.failed();
 			}
 		} else {
-			ResultEntity<Object> errAdmin = this.unauthorizedAdmin(request);
-			if (errAdmin != null) {	//	auth admin success
-				OutLoginWeb output = adminLoginService.reLogin(this.dataUser.get("adminId").toString(),request.getHeader("Authorization"));
-				if (output != null) {
-					return this.success(output);
-				} else {
-					return this.failed();
-				}
+			return this.failed();
+		}
+	}
+
+	@GetMapping(value = "/auth-admin")
+	public @ResponseBody ResultEntity<Object> reAuthAdmin(HttpServletRequest request) {
+		ResultEntity<Object> err = this.unauthorizedAdmin(request);
+		if (err == null) {	//	auth admin success
+			OutLoginWeb output = adminLoginService.reLogin(this.dataAdmin.get("adminId").toString(),request.getHeader("Authorization"));
+			if (output != null) {
+				return this.success(output);
 			} else {
 				return this.failed();
 			}
+		} else {
+			return this.failed();
 		}
 	}
 	

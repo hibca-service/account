@@ -6,12 +6,14 @@ import bit5.team2.account.service.RegisterService;
 import bit5.team2.library.base.BaseController;
 import bit5.team2.library.output.ResultEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
+@RefreshScope
 @RequestMapping("/account")
 @CrossOrigin(origins = "*")
 public class RegisterController extends BaseController {
