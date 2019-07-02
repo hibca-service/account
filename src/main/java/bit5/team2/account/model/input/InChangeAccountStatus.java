@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 @Getter
 @Setter
 public class InChangeAccountStatus {
 	@NotEmpty
-	private String userId;
+	private List<String> userId;
 
 	private boolean isActive;
 }

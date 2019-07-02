@@ -21,5 +21,5 @@ public interface UserRepo extends PagingAndSortingRepository<User,String> {
 
 	List<User> findUserByUsernameOrPhoneNumber(String userId, String phoneNumber);
 	
-	User findByUsername(String username);
+	List<User> findUserByUserIdIn(List<String> userId);
 }

@@ -80,12 +80,13 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public boolean changeAccountStatus(String userId, boolean isActive) {
-        Optional<User> userOptional = userRepo.findById(userId);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setActive(isActive ? "1" : "0");
-            userRepo.save(user);
+    public boolean changeAccountStatus(List<String> userId, boolean isActive) {
+        List<User> users = userRepo.findUserByUserIdIn(userId);
+        if (users.size() == userId.size()) {
+            for (User user : users) {
+                user.setActive(isActive ? "1" : "0");
+            }
+            userRepo.saveAll(users);
             return true;
         } else {
             return false;
@@ -93,12 +94,13 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public boolean changeOAStatus(String userId,boolean isApprove) {
-        Optional<User> userOptional = userRepo.findById(userId);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setOaApprove(isApprove ? "1" : "0");
-            userRepo.save(user);
+    public boolean changeOAStatus(List<String> userId,boolean isApprove) {
+        List<User> users = userRepo.findUserByUserIdIn(userId);
+        if (users.size() == userId.size()) {
+            for (User user : users) {
+                user.setOaApprove(isApprove ? "1" : "0");
+            }
+            userRepo.saveAll(users);
             return true;
         } else {
             return false;
