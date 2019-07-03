@@ -42,13 +42,13 @@ public class LoginServiceImpl extends BaseService implements LoginService {
             HashMap<String, Object> map = new HashMap<>();
             map.put("type", "user token");
             map.put("userId", user.getUserId());
-            String refresh = this.createAccessToken(map, false);
+            String refresh = this.createRefreshToken(map, false);
             map.put("username", user.getUsername());
             map.put("name", user.getName());
             map.put("dateOfBirth", user.getDateOfBirth());
             map.put("purpose", user.getPurpose());
             map.put("oa", user.getOa());
-            String access = this.createRefreshToken(map, false);
+            String access = this.createAccessToken(map, false);
 
             OutLoginMobile token = new OutLoginMobile();
             token.setAccessToken(access);
