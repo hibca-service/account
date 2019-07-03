@@ -1,5 +1,6 @@
 package bit5.team2.account.service.impl;
 
+import bit5.team2.account.model.Constant;
 import bit5.team2.account.model.RegisterValidator;
 import bit5.team2.account.model.input.InRegister;
 import bit5.team2.account.repo.ProfileRepo;
@@ -40,6 +41,7 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 		user.setName(inRegister.getUsername());
 		user.setPassword(this.hash(inRegister.getPassword()));
 		user.setPhoneNumber(inRegister.getPhoneNumber());
+		user.setPathProfilePicture(Constant.DEFAULT_PROFILE_PICTURE_OA);
 		return user;
 	}
 
@@ -51,6 +53,7 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 		user.setName(inRegister.getUsername());
 		user.setPassword(this.hash(inRegister.getPassword()));
 		user.setPhoneNumber(inRegister.getPhoneNumber());
+		user.setPathProfilePicture(Constant.DEFAULT_PROFILE_PICTURE_USER);
 		return user;
 	}
 
