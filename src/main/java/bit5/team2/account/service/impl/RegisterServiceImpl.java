@@ -36,7 +36,7 @@ public class RegisterServiceImpl extends BaseService implements RegisterService 
 		User user = new User();
 		user.setOa("1");
 		user.setActive("1");
-		user.setOaApprove("1");
+		user.setOaApprove("0");
 		user.setUsername(inRegister.getUsername());
 		user.setName(inRegister.getUsername());
 		user.setPassword(this.hash(inRegister.getPassword()));

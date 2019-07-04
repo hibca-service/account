@@ -9,8 +9,6 @@ import lombok.Setter;
 public class InChangeProfile {
 	private String pathProfilePicture;
 
-	private String password;
-
 	private String name;
 
 //	private String phoneNumber;

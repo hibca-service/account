@@ -1,5 +1,6 @@
 package bit5.team2.account.controller;
 
+import bit5.team2.account.model.input.InChangePassword;
 import bit5.team2.account.model.input.InChangeProfile;
 import bit5.team2.account.service.ProfileService;
 import bit5.team2.library.base.BaseController;
@@ -53,6 +54,28 @@ public class ProfileController extends BaseController {
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
             if (profileService.changeProfile((String) this.dataUser.get("username"),input)) {
+                return this.success(null);
+            } else {
+                return this.failed();
+            }
+        } else {
+            return errorInput;
+        }
+    }
+
+    @PutMapping(value = "/change-password", consumes = "application/json")
+    public @ResponseBody
+    ResultEntity<Object> changePassword(HttpServletRequest request,
+                                       @RequestBody @Valid InChangePassword input,
+                                       BindingResult bindingResult) {
+        ResultEntity<Object> err = this.unauthorizedUser(request);
+        if (err != null) {
+            return err;
+        }
+
+        ResultEntity<Object> errorInput = this.validateInput(bindingResult);
+        if (errorInput == null) {
+            if (profileService.changePassword((String) this.dataUser.get("username"),input)) {
                 return this.success(null);
             } else {
                 return this.failed();

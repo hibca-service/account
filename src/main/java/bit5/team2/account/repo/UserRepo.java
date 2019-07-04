@@ -15,6 +15,8 @@ import java.util.Optional;
 public interface UserRepo extends PagingAndSortingRepository<User,String> {
 	Optional<User> findUserByUserId(String userId);
 
+	Optional<User> findUserByUsernameAndPassword(String username, String password);
+
 	Optional<User> findUserByUsernameAndFirebaseTokenIsNotNullAndFirebaseUUIDIsNotNull(String username);
 
 	Optional<User> findUserByUserIdAndFirebaseTokenIsNullAndFirebaseUUIDIsNull(String userId);

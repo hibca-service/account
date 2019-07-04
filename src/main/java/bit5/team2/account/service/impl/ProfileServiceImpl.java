@@ -1,6 +1,7 @@
 package bit5.team2.account.service.impl;
 
 import bit5.team2.account.model.Constant;
+import bit5.team2.account.model.input.InChangePassword;
 import bit5.team2.account.model.input.InChangeProfile;
 import bit5.team2.account.repo.ProfileRepo;
 import bit5.team2.account.repo.UserRepo;
@@ -34,9 +35,6 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 			if (user.getPathProfilePicture() == null) {
 				user.setPathProfilePicture(user.getOa().equals("1") ? Constant.DEFAULT_PROFILE_PICTURE_OA : Constant.DEFAULT_PROFILE_PICTURE_USER);
 			}
-			if (input.getPassword() != null && !input.getPassword().equals("")) {
-				user.setPassword(this.hash(input.getPassword()));
-			}
 			if (input.getName() != null && !input.getName().equals("")) {
 				user.setName(input.getName());
 			}
@@ -62,4 +60,17 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 		Optional<Profile> profileOptional = profileRepo.findProfileByUsername(username);
 		return profileOptional.orElse(null);
     }
+
+	@Override
+	public boolean changePassword(String username, InChangePassword input) {
+		Optional<User> userOptional = userRepo.findUserByUsernameAndPassword(username,this.hash(input.getOldPassword()));
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();
+			user.setPassword(this.hash(input.getNewPassword()));
+			userRepo.save(user);
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
