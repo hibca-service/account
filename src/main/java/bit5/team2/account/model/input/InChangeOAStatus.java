@@ -12,5 +12,5 @@ public class InChangeOAStatus {
 	@NotEmpty
 	private List<String> userId;
 
-	private boolean isApprove;
+	private boolean oaApprove;
 }

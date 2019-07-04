@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>bit5.team2</groupId>
 	<artifactId>account</artifactId>
-	<version>0.0.16</version>
+	<version>0.0.17</version>
 	<name>account</name>
 	<description>Account Project @HiBCA</description>
 

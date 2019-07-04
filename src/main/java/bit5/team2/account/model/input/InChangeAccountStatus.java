@@ -12,5 +12,5 @@ public class InChangeAccountStatus {
 	@NotEmpty
 	private List<String> userId;
 
-	private boolean isActive;
+	private boolean active;
 }

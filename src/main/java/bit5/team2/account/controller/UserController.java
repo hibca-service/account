@@ -84,7 +84,7 @@ public class UserController extends BaseController {
 
         ResultEntity<Object> errorInput = this.validateInput(bindingResult);
         if (errorInput == null) {
-            if (userService.changeOAStatus(input.getUserId(),input.isApprove())) {
+            if (userService.changeOAStatus(input.getUserId(),input.isOaApprove())) {
                 return this.success(null);
             } else {
                 return this.failed();
