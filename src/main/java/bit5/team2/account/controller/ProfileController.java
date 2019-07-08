@@ -5,7 +5,7 @@ import bit5.team2.account.model.input.InChangeProfile;
 import bit5.team2.account.service.ProfileService;
 import bit5.team2.library.base.BaseController;
 import bit5.team2.library.output.ResultEntity;
-import bit5.team2.library.view.Profile;
+import bit5.team2.library.view.ProfileView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.validation.BindingResult;
@@ -32,7 +32,7 @@ public class ProfileController extends BaseController {
             return err;
         }
 
-        Profile output = profileService.getProfile(username.orElse((String) this.dataUser.get("username")));
+        ProfileView output = profileService.getProfile(username.orElse((String) this.dataUser.get("username")));
 
         if (output == null) {
             return this.failed();

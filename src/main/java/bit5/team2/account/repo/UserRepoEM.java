@@ -2,7 +2,6 @@ package bit5.team2.account.repo;
 
 import bit5.team2.library.base.PagingProperties;
 import bit5.team2.library.entity.User;
-import bit5.team2.library.view.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;

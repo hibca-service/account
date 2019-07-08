@@ -6,7 +6,7 @@ import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.LoginService;
 import bit5.team2.library.base.BaseService;
 import bit5.team2.library.entity.User;
-import bit5.team2.library.view.Profile;
+import bit5.team2.library.view.ProfileView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +30,8 @@ public class LoginServiceImpl extends BaseService implements LoginService {
             return null;
         }
 
-        Optional<Profile> profileOptional = profileRepo.findProfileByUsernameAndPassword(username, hashedPassword);
-        return profileOptional.map(profile -> this.generateToken(profile.getUserId())).orElse(null);
+        Optional<ProfileView> profileViewOptional = profileRepo.findProfileViewByUsernameAndPassword(username, hashedPassword);
+        return profileViewOptional.map(profile -> this.generateToken(profile.getUserId())).orElse(null);
     }
 
     @Override

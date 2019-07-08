@@ -1,6 +1,6 @@
 package bit5.team2.account.repo;
 
-import bit5.team2.library.view.Profile;
+import bit5.team2.library.view.ProfileView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ProfileRepo extends PagingAndSortingRepository<Profile,String> {
-	Optional<Profile> findProfileByUsername(String userId);
+public interface ProfileRepo extends PagingAndSortingRepository<ProfileView,String> {
+	Optional<ProfileView> findProfileViewByUsername(String userId);
 
-	Optional<Profile> findProfileByUsernameAndPassword(String userId,String password);
+	Optional<ProfileView> findProfileViewByUsernameAndPassword(String userId, String password);
 
-	@Query("select p from Profile p where p.name like %:key% or p.username like %:key% or p.phoneNumber like %:key%")
-	Page<Profile> findByKey(Pageable pageable, @Param("key") String key);
+	@Query("select p from ProfileView p where p.name like %:key% or p.username like %:key% or p.phoneNumber like %:key%")
+	Page<ProfileView> findByKey(Pageable pageable, @Param("key") String key);
 }

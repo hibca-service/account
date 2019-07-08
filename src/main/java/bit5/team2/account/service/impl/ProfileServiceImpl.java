@@ -8,7 +8,7 @@ import bit5.team2.account.repo.UserRepo;
 import bit5.team2.account.service.ProfileService;
 import bit5.team2.library.base.BaseService;
 import bit5.team2.library.entity.User;
-import bit5.team2.library.view.Profile;
+import bit5.team2.library.view.ProfileView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,8 +56,8 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 	}
 
 	@Override
-	public Profile getProfile(String username) {
-		Optional<Profile> profileOptional = profileRepo.findProfileByUsername(username);
+	public ProfileView getProfile(String username) {
+		Optional<ProfileView> profileOptional = profileRepo.findProfileViewByUsername(username);
 		return profileOptional.orElse(null);
     }
 

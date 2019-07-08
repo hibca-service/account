@@ -10,7 +10,7 @@ import bit5.team2.library.base.BaseService;
 import bit5.team2.library.base.PagingProperties;
 import bit5.team2.library.entity.User;
 import bit5.team2.library.entity.UserFollow;
-import bit5.team2.library.view.Profile;
+import bit5.team2.library.view.ProfileView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,12 +40,12 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     public PagingProperties<Profiles> getUser(PagingProperties<Profiles> pagingProperties, String userLogin) {
         Pageable pageable = PageRequest.of(pagingProperties.getPage(),pagingProperties.getPageSize(),pagingProperties.getDirection(),pagingProperties.getOrderBy());
-        Page<Profile> profiles = profileRepo.findByKey(pageable,pagingProperties.getSearchKey());
+        Page<ProfileView> profiles = profileRepo.findByKey(pageable,pagingProperties.getSearchKey());
 
         List<String> followed = this._getFollowing(userLogin);
 
         List<Profiles> profilesList = new ArrayList<>();
-        for(Profile profile : profiles) {
+        for(ProfileView profile : profiles) {
             Profiles temp = new Profiles();
             temp.setUserId(profile.getUserId());
             temp.setOa(profile.getOa());
