@@ -11,6 +11,8 @@ public class InChangeProfile {
 
 	private String name;
 
+	private String status;
+
 //	private String phoneNumber;
 
 	@JsonFormat(pattern = "yyyy-MM-dd")
@@ -21,6 +23,4 @@ public class InChangeProfile {
 	private String purpose;
 
 //	private boolean oa;
-
-//	private String status;
 }

@@ -38,6 +38,9 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 			if (input.getName() != null && !input.getName().equals("")) {
 				user.setName(input.getName());
 			}
+			if (input.getStatus() != null && !input.getStatus().equals("")) {
+				user.setUserStatus(input.getStatus());
+			}
 			if (input.getDateOfBirth() != null && !input.getDateOfBirth().equals("")) {
 				user.setDateOfBirth(input.getDateOfBirth());
 			}
